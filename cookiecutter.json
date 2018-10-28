@@ -1,3 +1,5 @@
 {
-    "tool_identifier": "example-tool"
+    "tool_identifier": "example-tool",
+    "tool_name": "Example Tool",
+    "user_name": "Example User"
 }
