@@ -17,7 +17,7 @@
   <input name="csrf_token" type="hidden" value="{{ csrf_token() }}">
   <div class="form-group">
     <label for="praise">New praise</label>
-    <input id="praise" class="form-control" name="praise" type="text" placeholder="Praise them with great praise!" required {{ form_value('praise')  }}>
+    <input {{ form_attributes('praise') }} class="form-control" type="text" placeholder="Praise them with great praise!" required>
   </div>
   <button type="submit" class="btn btn-primary">Change</button>
 </form>
