@@ -24,6 +24,15 @@ def csrf_token():
         flask.session['csrf_token'] = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(64))
     return flask.session['csrf_token']
 
+@app.template_global()
+def form_value(name):
+    if 'repeat_form' in flask.g and name in flask.request.form:
+        return (flask.Markup(r' value="') +
+                flask.Markup.escape(flask.request.form[name]) +
+                flask.Markup(r'" '))
+    else:
+        return flask.Markup()
+
 
 @app.route('/')
 def index():
@@ -43,6 +52,7 @@ def praise():
             flask.session['praise'] = flask.request.form.get('praise', 'praise missing')
         else:
             csrf_error = True
+            flask.g.repeat_form = True
 
     name = None
     praise = flask.session.get('praise', 'You rock!')
