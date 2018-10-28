@@ -2,6 +2,8 @@
 
 import flask
 import os
+import random
+import string
 import yaml
 
 
@@ -16,6 +18,13 @@ except FileNotFoundError:
     app.secret_key = 'fake'
 
 
+@app.template_global()
+def csrf_token():
+    if 'csrf_token' not in flask.session:
+        flask.session['csrf_token'] = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(64))
+    return flask.session['csrf_token']
+
+
 @app.route('/')
 def index():
     return flask.render_template('index.html')
@@ -25,8 +34,13 @@ def greet(name):
     return flask.render_template('greet.html',
                                  name=name)
 
-@app.route('/praise')
+@app.route('/praise', methods=['GET', 'POST'])
 def praise():
+    if flask.request.method == 'POST':
+        token = flask.session.pop('csrf_token', None)
+        if token and token == flask.request.form.get('csrf_token'):
+            flask.session['praise'] = flask.request.form.get('praise', 'praise missing')
+
     name = None
     praise = flask.session.get('praise', 'You rock!')
 
