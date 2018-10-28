@@ -36,14 +36,18 @@ def greet(name):
 
 @app.route('/praise', methods=['GET', 'POST'])
 def praise():
+    csrf_error = False
     if flask.request.method == 'POST':
         token = flask.session.pop('csrf_token', None)
         if token and token == flask.request.form.get('csrf_token'):
             flask.session['praise'] = flask.request.form.get('praise', 'praise missing')
+        else:
+            csrf_error = True
 
     name = None
     praise = flask.session.get('praise', 'You rock!')
 
     return flask.render_template('praise.html',
                                  name=name,
-                                 praise=praise)
+                                 praise=praise,
+                                 csrf_error=csrf_error)

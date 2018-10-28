@@ -6,6 +6,13 @@
 <h1>It’s an anonymous user!</h1>
 {% endif %}
 <h2>{{ praise }}</h2>
+{% if csrf_error %}
+<div class="alert alert-warning">
+  There was an error processing your request
+  (<abbr title="cross-site request forgery">CSRF</abbr> protection failed).
+  Please try submitting the form again.
+</div>
+{% endif %}
 <form method="post">
   <input name="csrf_token" type="hidden" value="{{ csrf_token() }}">
   <div class="form-group">
