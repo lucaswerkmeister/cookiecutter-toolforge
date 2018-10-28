@@ -1,9 +1,19 @@
 # -*- coding: utf-8 -*-
 
 import flask
+import os
+import yaml
 
 
 app = flask.Flask(__name__)
+
+__dir__ = os.path.dirname(__file__)
+try:
+    with open(os.path.join(__dir__, 'config.yaml')) as config_file:
+        app.config.update(yaml.safe_load(config_file))
+except FileNotFoundError:
+    print('config.yaml file not found, assuming local development setup')
+    app.secret_key = 'fake'
 
 
 @app.route('/')
