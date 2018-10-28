@@ -42,6 +42,16 @@ def form_attributes(name):
             flask.Markup(r'" ') +
             form_value(name))
 
+@app.template_filter()
+def user_link(user_name):
+    return (flask.Markup(r'<a href="https://www.wikidata.org/wiki/User:') +
+            flask.Markup.escape(user_name.replace(' ', '_')) +
+            flask.Markup(r'">') +
+            flask.Markup(r'<bdi>') +
+            flask.Markup.escape(user_name) +
+            flask.Markup(r'</bdi>') +
+            flask.Markup(r'</a>'))
+
 
 @app.route('/')
 def index():
