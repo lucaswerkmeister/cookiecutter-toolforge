@@ -30,6 +30,16 @@ FLASK_ENV=development FLASK_APP=app.py flask run
 
 Then, open http://localhost:5000/ and follow the further instructions there.
 
+## Features
+
+The full list of features is on the tool’s default index page once you follow the instructions above,
+but in brief, this template includes:
+
+* A basic HTML template, using Bootstrap v4.0.
+* Examples of Flask routing and templating.
+* Form handling, including CSRF protection.
+* Authentication against Wikimedia sites using OAuth.
+
 ## License
 
 This template is released under the MIT license, as provided in the `LICENSE` file that accompanies it.
