@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import flask
+import mwapi
 import mwoauth
 import os
 import random
 import requests
+import requests_oauthlib
 import string
 import toolforge
 import yaml
@@ -103,8 +105,26 @@ def praise():
             csrf_error = True
             flask.g.repeat_form = True
 
-    name = None
-    praise = flask.session.get('praise', 'You rock!')
+    if 'oauth_access_token' in flask.session:
+        access_token = mwoauth.AccessToken(**flask.session['oauth_access_token'])
+        auth = requests_oauthlib.OAuth1(client_key=consumer_token.key, client_secret=consumer_token.secret,
+                                        resource_owner_key=access_token.key, resource_owner_secret=access_token.secret)
+        session = mwapi.Session(host='https://www.wikidata.org', auth=auth, user_agent=user_agent)
+
+        userinfo = session.get(action='query', meta='userinfo', uiprop='options')['query']['userinfo']
+        name = userinfo['name']
+        gender = userinfo['options']['gender']
+        if gender == 'male':
+            default_praise = 'Praise him with great praise!'
+        elif gender == 'female':
+            default_praise = 'Praise her with great praise!'
+        else:
+            default_praise = 'Praise them with great praise!'
+    else:
+        name = None
+        default_praise = 'You rock!'
+
+    praise = flask.session.get('praise', default_praise)
 
     return flask.render_template('praise.html',
                                  name=name,
