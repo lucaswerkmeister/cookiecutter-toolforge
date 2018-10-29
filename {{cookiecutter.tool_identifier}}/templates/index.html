@@ -241,4 +241,24 @@ chmod go-rwx config.yaml</pre></code>
   <a href="https://{% endraw %}{{ cookiecutter.wiki_domain }}{% raw %}/wiki/User:{% endraw %}{{ cookiecutter.user_name | replace(' ', '_') }}/{{ cookiecutter.tool_name | replace(' ', '_') }}{% raw %}">on-wiki documentation page</a>,
   so you should probably create that and put end-user documentation for the tool there.
 </p>
+<h3>Announce the tool</h3>
+<p>
+  When everything else is done
+  (or doesn’t apply, e. g. perhaps your tool just doesn’t need OAuth),
+  you’re ready to announce your tool to the world.
+  (You can also do it earlier, if you want, of course, while it’s still work in progress.)
+  Here are some inspirations for where you could do that:
+</p>
+<ul>
+{% endraw %}{% if cookiecutter.wiki_domain == 'www.wikidata.org' %}
+  <li><a href="https://www.wikidata.org/wiki/Special:GoToLinkedPage/wikidatawiki/Q16503">project chat</a></li>
+  <li><a href="https://www.wikidata.org/wiki/Wikidata:Tools">tool list</a></li>
+{% else %}
+  <li>your home wiki’s <a href="http://www.wikidata.org/entity/Q16503">village pump</a></li>
+  <li>your home wiki’s <a href="http://www.wikidata.org/entity/Q6584911">list of tools</a></li>
+{% endif %}{% raw %}
+  <li>talk pages of relevant WikiProjects</li>
+  <li>mailing lists</li>
+  <li>social media</li>
+</ul>
 {% endblock %}{% endraw %}
