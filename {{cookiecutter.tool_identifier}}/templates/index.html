@@ -2,6 +2,228 @@
 {% block main %}
 <h1>{% endraw %}{{ cookiecutter.tool_name }}{% raw %}</h1>
 <p>
-  This tool does things.
+  <strong>Congratulations!</strong>
+  You’ve started creating a new tool – that’s awesome!
+</p>
+<h2>Guide to this tool</h2>
+<p>
+  You’ll want to replace a lot of the code that this template generated for you,
+  since it’s mainly for demonstration purposes.
+  Here’s what the different parts demonstrate:
+</p>
+<ul>
+  <li>
+    <p>
+      <a href="{{ url_for('index') }}">This index page</a> is almost completely static.
+      The only interesting part is how the hyperlinks in this list are generated –
+      check out the template source code (<code>templates/index.html</code>) for that.
+    </p>
+  </li>
+  <li>
+    <p>
+      <a href="{{ url_for('greet', name='John Doe') }}">The greeting endpoint</a> issues a simple greeting to an arbitrary person.
+      It demonstrates simple URL routes (you can append any name after <code>/greet/</code>, and it will appear in the page),
+      as well as simple templating (including the name in the page).
+      Try setting the name to something hilarious like <a href="{{ url_for('greet', name='<script>alert(\'pwnd\');') }}"><code>&lt;script&gt;alert('pwnd');</code></a>
+      to see how the template automatically escapes user input.
+      (The name can’t contain a slash, hence the missing <code>&lt;/script&gt;</code>.)
+    </p>
+  </li>
+  <li>
+    <p>
+      <a href="{{ url_for('praise') }}">The praising endpoint</a> serves several functions at once.
+      Its basic function is to heap praise upon the visitor.
+    </p>
+    <p>
+      The default praise is a very generic phrase,
+      but the page includes a form which allows users to set a different praise.
+      The praise is stored inside the user’s session,
+      demonstrating Flask’s session handling.
+      The form also includes a “CSRF token”,
+      and if the form is submitted with an incorrect token (or without one),
+      it is rejected and the session is not updated.
+      This isn’t the only way to do <abbr title="cross-site request forgery">CSRF</abbr> protection,
+      but it’s one fairly simple implementation;
+      <strong>you should never ever have forms without any CSRF protection.</strong>
+    </p>
+    <p>
+      This page also includes OAuth support.
+      If OAuth has been configured (see below),
+      then the user can optionally log in using the link in the navigation bar,
+      and if they are logged in,
+      the page will praise them by name
+      and gender the default praise correctly
+      according to the gender they set in their MediaWiki preferences.
+      This demonstrates OAuth handling and how to make authenticated MediaWiki API requests.
+    </p>
+  </li>
+</ul>
+<p>
+  Feel free to rip whatever code you want from these pages
+  and rearrange it as fits your tool,
+  then throw away everything else that you don’t need.
+</p>
+<h2>Next steps</h2>
+<p>Here are some next steps you might want to do.</p>
+<h3>Create the tool account on Wikimedia Toolforge</h3>
+<p>
+  <a href="https://toolsadmin.wikimedia.org/tools/create/">Create a new tool account with toolsadmin</a>,
+  using the name <code>{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}</code>.
+  See <a href="https://wikitech.wikimedia.org/wiki/Help:Toolforge#Tool_Accounts">the documentation on Wikitech</a> for more information.
+</p>
+<h3>Set up the source code repository</h3>
+<p>
+  <a href="https://toolsadmin.wikimedia.org/tools/id/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}/repos/create">Create a new Phabricator repository with toolsadmin</a>,
+  using the default repository name.
+  (Feel free to host your source code elsewhere, if you want,
+  but in that case don’t forget to update the link in the navbar in <code>base.html</code>.)
+</p>
+<p>
+  Next, push the source code from wherever you’re currently running it to Phabricator.
+  (The following commands should be run from the directory where <code>app.py</code> and <code>requirements.txt</code> are.)
+</p>
+<code><pre>git init .
+git add .
+git commit -m 'Initial commit'
+git remote add origin vcs@git-ssh.wikimedia.org:source/tool-{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.git
+git push -u origin master</pre></code>
+<h3>Deploy the tool on Wikimedia Toolforge</h3>
+<p>
+  SSH into Toolforge
+  (<code>login.tools.wmflabs.org</code>;
+  see <a href="https://wikitech.wikimedia.org/wiki/Help:Access">the documentation on Wikitech</a> for more information),
+  and then run <code>become {% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}</code>.
+</p>
+<p>Create the base directory for the tool.</p>
+<code><pre>mkdir -p ~/www/python/</pre></code>
+<p>Clone the source code repository.</p>
+<code><pre>git clone https://phabricator.wikimedia.org/source/tool-{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.git ~/www/python/src/</pre></code>
+<p>
+  Set up the Python virtual environment.
+  We do this from within a Kubernetes shell,
+  to ensure that we’re using the same Python version that the tool will later run under.
+</p>
+<code><pre>webservice --backend=kubernetes python shell
+python3 -m venv ~/www/python/venv
+source ~/www/python/venv/bin/activate
+pip install --upgrade pip
+pip install -r ~/www/python/src/requirements.txt
+exit</code></pre>
+<p>Start the webservice.</p>
+<code><pre>webservice --backend=kubernetes python start</pre></code>
+<p>
+  Your tool should now be running:
+  visit <a href="https://tools.wmflabs.org/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}">tools.wmflabs.org/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}</a> to check.
+  Generally, any time you make changes,
+  the update process will consist of the following commands:
+</p>
+<code><pre>git -C ~/www/python/src pull
+webservice --backend=kubernetes python restart</pre></code>
+<p>
+  If the tool requires any new dependencies
+  (that is, if the <code>requirements.txt</code> file was changed),
+  you’ll also want to run the second <code>pip install</code> command from above again.
+  Make sure you do that from within the virtual environment
+  (i. e. you’ve run the <code>source</code> command from above first),
+  and ideally inside the Kubernetes shell as well.
+</p>
+<h3>Configure the tool</h3>
+<p>
+  You should also create the config file for the tool.
+  It currently serves two purposes:
+  it configures the secret key with which Flask signs the user session to protect it against manipulation,
+  and it optionally contains the OAuth secrets your tool needs.
+  (Of course, you can add other things to the configuration file if you want to.)
+</p>
+<p>To start working with the config file, run the following two commands:</p>
+<code><pre>cp config.yaml.example config.yaml
+chmod go-rwx config.yaml</pre></code>
+<p>
+  It is <em>imperative</em> that you make the file unreadable to anyone else (with the second command)
+  before you start to actually fill it with real values:
+  it contains secrets which no one else should be able to read.
+</p>
+<p>
+  (<em>Where</em> should you run these commands, by the way?
+  Almost certainly on Toolforge, as your tool account, inside the <code>~/www/python/src/</code> directory.
+  You can also do it on the local version, if you want.)
+</p>
+<p>
+  After this, you can start editing the configuration file,
+  using your favorite text editor.
+  On Toolforge, this will have to be a terminal-based editor;
+  if you’re not familiar with those yet,
+  <a href="http://www.wikidata.org/entity/Q306101">nano</a> is a fairly user-friendly option:
+</p>
+<code><pre>nano config.yaml</pre></code>
+<p>
+  For the <code>SECRET_KEY</code> option,
+  you should pick some long (about 50 characters), unguessable string.
+  If you want, you can just mash your keyboard for a bit;
+  alternatively, you can run the following command to generate and print a random string:
+</p>
+<code><pre>cat /proc/sys/kernel/random/uuid</pre></code>
+<p>
+  The <code>oauth</code> section is only necessary if you want to set up OAuth (see the next section),
+  otherwise you can remove it completely.
+</p>
+<h3>Register an OAuth consumer</h3>
+<p>
+  You can register an OAuth consumer <a href="https://meta.wikimedia.org/wiki/Special:OAuthConsumerRegistration/propose">on this special page</a>.
+  The application name should be your tool name, {% endraw %}{{ cookiecutter.tool_name }}{% raw %};
+  the version can stay at 1.0 for now,
+  and the description you’ll have to write yourself.
+  Do not check the “This consumer is for use only by {% endraw %}{{ cookiecutter.user_name }}{% raw %}” box.
+</p>
+<p>
+  For the OAuth callback URL,
+  specify <code>https://tools.wmflabs.org/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}/oauth/callback</code>
+  (assuming you didn’t mess with the route of the <code>oauth_callback</code> function).
+  You <em>can</em> use this consumer for local testing as well, if you want:
+  the login will redirect you to some URL like
+  <code>https://tools.wmflabs.org/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}/oauth/callback?oauth_verifier=<var>xxx</var>&oauth_token=<var>yyy</var></code>,
+  which you can manually rewrite to something like
+  <code>http://localhost:5000/oauth/callback?oauth_verifier=<var>xxx</var>&oauth_token=<var>yyy</var></code>,
+  simply by editing the URL in your browser’s address bar.
+</p>
+<p>
+  If you know for sure that you will only want to access one project with this tool,
+  you can select that as the applicable project,
+  e. g. <code>wikidatawiki</code> (<code>www.wikidata.org</code> in the dropdown list),
+  otherwise just leave it at the default “all projects”.
+  Note that <code>test.wikidata.org</code> is a separate wiki,
+  so if you want to access both real and test Wikidata with the same tool,
+  you’ll already need “all projects” access.
+</p>
+<p>
+  Select which rights you want access to, if any
+  (otherwise select one of the “user identification only” options).
+  This will highly depend on your tool,
+  but “edit existing pages”, “create, edit and move pages” and “high-volume editing” are probably the most generally useful ones.
+</p>
+<p>
+  Leave the allowed IP ranges and public RSA key at their default value, you won’t use these.
+  (Toolforge’s IP range is probably not guaranteed to be stable, and we’re not using RSA.)
+</p>
+<p>
+  Check the box at the end of the form
+  (after reading it, and only if you actually agree with what it says –
+  you’re not just following this guide blindly, right?),
+  and submit it.
+  The next page will show you two random strings;
+  these will be the <code>consumer_key</code> and <code>consumer_secret</code> in the <code>config.yaml</code> file.
+</p>
+<p>
+  Afterwards, you can post a steward request for someone to approve of your new consumer,
+  by using the <a href="https://meta.wikimedia.org/wiki/Template:Oauthapprequest">Oauthapprequest</a> template
+  on <a href="https://meta.wikimedia.org/wiki/Steward_requests/Miscellaneous">Steward requests/Miscellaneous</a>.
+  (If you don’t do that, someone will eventually get around to looking at your request too, but it might take longer.)
+  Until your consumer has been approved,
+  you can only test it using your own account
+  (i. e., the one that submitted the request),
+  so you’ll still be able to test the tool by yourself,
+  but other people won’t have access to it.
+  (You will get an email notification once the request is accepted,
+  so there’s no need to keep refreshing your watchlist or anything like that.)
 </p>
 {% endblock %}{% endraw %}
