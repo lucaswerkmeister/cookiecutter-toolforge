@@ -57,7 +57,7 @@ def form_attributes(name):
 
 @app.template_filter()
 def user_link(user_name):
-    return (flask.Markup(r'<a href="https://www.wikidata.org/wiki/User:') +
+    return (flask.Markup(r'<a href="https://{{ cookiecutter.wiki_domain }}/wiki/User:') +
             flask.Markup.escape(user_name.replace(' ', '_')) +
             flask.Markup(r'">') +
             flask.Markup(r'<bdi>') +
@@ -76,7 +76,7 @@ def authentication_area():
                 flask.Markup(r'">Log in</a>'))
 
     access_token = mwoauth.AccessToken(**flask.session['oauth_access_token'])
-    identity = mwoauth.identify('https://www.wikidata.org/w/index.php',
+    identity = mwoauth.identify('https://{{ cookiecutter.wiki_domain }}/w/index.php',
                                 consumer_token,
                                 access_token)
 
@@ -109,7 +109,7 @@ def praise():
         access_token = mwoauth.AccessToken(**flask.session['oauth_access_token'])
         auth = requests_oauthlib.OAuth1(client_key=consumer_token.key, client_secret=consumer_token.secret,
                                         resource_owner_key=access_token.key, resource_owner_secret=access_token.secret)
-        session = mwapi.Session(host='https://www.wikidata.org', auth=auth, user_agent=user_agent)
+        session = mwapi.Session(host='https://{{ cookiecutter.wiki_domain }}', auth=auth, user_agent=user_agent)
 
         userinfo = session.get(action='query', meta='userinfo', uiprop='options')['query']['userinfo']
         name = userinfo['name']
@@ -133,13 +133,13 @@ def praise():
 
 @app.route('/login')
 def login():
-    redirect, request_token = mwoauth.initiate('https://www.wikidata.org/w/index.php', consumer_token, user_agent=user_agent)
+    redirect, request_token = mwoauth.initiate('https://{{ cookiecutter.wiki_domain }}/w/index.php', consumer_token, user_agent=user_agent)
     flask.session['oauth_request_token'] = dict(zip(request_token._fields, request_token))
     return flask.redirect(redirect)
 
 @app.route('/oauth/callback')
 def oauth_callback():
     request_token = mwoauth.RequestToken(**flask.session['oauth_request_token'])
-    access_token = mwoauth.complete('https://www.wikidata.org/w/index.php', consumer_token, request_token, flask.request.query_string, user_agent=user_agent)
+    access_token = mwoauth.complete('https://{{ cookiecutter.wiki_domain }}/w/index.php', consumer_token, request_token, flask.request.query_string, user_agent=user_agent)
     flask.session['oauth_access_token'] = dict(zip(access_token._fields, access_token))
     return flask.redirect(flask.url_for('index'))

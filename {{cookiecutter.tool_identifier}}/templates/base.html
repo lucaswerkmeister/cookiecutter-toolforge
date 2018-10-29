@@ -12,7 +12,7 @@
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
       <a href="{{ url_for('index') }}" class="navbar-brand">{% endraw %}{{ cookiecutter.tool_name }}{% raw %}</a>
       <ul class="navbar-nav mr-auto">
-        <li><a href="https://www.wikidata.org/wiki/User:{% endraw %}{{ cookiecutter.user_name | replace(' ', '_') }}/{{ cookiecutter.tool_name | replace(' ', '_') }}{% raw %}" class="nav-link">Documentation</a></li>
+        <li><a href="https://{% endraw %}{{ cookiecutter.wiki_domain }}{% raw %}/wiki/User:{% endraw %}{{ cookiecutter.user_name | replace(' ', '_') }}/{{ cookiecutter.tool_name | replace(' ', '_') }}{% raw %}" class="nav-link">Documentation</a></li>
         <li><a href="//tools.wmflabs.org/" class="nav-link">Wikimedia Toolforge</a></li>
         <li><a href="https://phabricator.wikimedia.org/source/tool-{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}/" class="nav-link">Source code</a></li>
       </ul>

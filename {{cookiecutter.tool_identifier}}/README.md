@@ -3,7 +3,7 @@
 [This tool](https://tools.wmflabs.org/{{ cookiecutter.tool_identifier }}/) does things.
 
 For more information,
-please see the tool’s [on-wiki documentation page](https://www.wikidata.org/wiki/User:{{ cookiecutter.user_name | replace(' ', '_') }}/{{ cookiecutter.tool_name | replace(' ', '_') }}).
+please see the tool’s [on-wiki documentation page](https://{{ cookiecutter.wiki_domain }}/wiki/User:{{ cookiecutter.user_name | replace(' ', '_') }}/{{ cookiecutter.tool_name | replace(' ', '_') }}).
 
 ## Toolforge setup
 
