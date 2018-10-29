@@ -25,7 +25,7 @@ try:
         app.config.update(yaml.safe_load(config_file))
 except FileNotFoundError:
     print('config.yaml file not found, assuming local development setup')
-    app.secret_key = 'fake'
+    app.secret_key = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(64))
 
 if 'oauth' in app.config:
     consumer_token = mwoauth.ConsumerToken(app.config['oauth']['consumer_key'], app.config['oauth']['consumer_secret'])
