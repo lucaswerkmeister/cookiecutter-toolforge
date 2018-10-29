@@ -3,6 +3,33 @@
 A [cookiecutter](https://github.com/audreyr/cookiecutter) template
 for Wikimedia Toolforge tools using the Flask Python framework.
 
+## Usage
+
+Install `cookiecutter` if it’s not already installed on your system.
+If it’s not available in your package manager, the following command should work:
+
+```sh
+sudo pip install cookiecutter
+```
+
+Once `cookiecutter` is installed, you can create a new tool project with the following command:
+
+```sh
+cookiecutter gh:lucaswerkmeister/cookiecutter-toolforge
+```
+
+You will be prompted for some metadata about the tool,
+and then the resulting source code will be placed into a directory named after the tool’s identifier
+(the first thing you were asked for).
+Change into that directory and run the tool locally:
+
+```sh
+cd <tool_identifier>
+FLASK_ENV=development FLASK_APP=app.py flask run
+```
+
+Then, open http://localhost:5000/ and follow the further instructions there.
+
 ## License
 
 This template is released under the MIT license, as provided in the `LICENSE` file that accompanies it.
