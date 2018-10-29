@@ -3,6 +3,7 @@
 import flask
 import os
 import random
+import requests
 import string
 import toolforge
 import yaml
@@ -11,6 +12,9 @@ import yaml
 app = flask.Flask(__name__)
 
 app.before_request(toolforge.redirect_to_https)
+
+toolforge.set_user_agent('{{ cookiecutter.tool_identifier }}', email='{{ cookiecutter.user_email }}')
+user_agent = requests.utils.default_user_agent()
 
 __dir__ = os.path.dirname(__file__)
 try:

@@ -1,5 +1,6 @@
 {
     "tool_identifier": "example-tool",
     "tool_name": "Example Tool",
-    "user_name": "Example User"
+    "user_name": "Example User",
+    "user_email": "tools.{{ cookiecutter.tool_identifier }}@tools.wmflabs.org"
 }
