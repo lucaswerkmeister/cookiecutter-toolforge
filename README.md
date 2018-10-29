@@ -40,6 +40,8 @@ but in brief, this template includes:
 * Form handling, including CSRF protection.
 * Authentication against Wikimedia sites using OAuth.
 
+![screenshot](https://raw.githubusercontent.com/lucaswerkmeister/cookiecutter-toolforge/master/screenshot.png)
+
 ## License
 
 This template is released under the MIT license, as provided in the `LICENSE` file that accompanies it.
