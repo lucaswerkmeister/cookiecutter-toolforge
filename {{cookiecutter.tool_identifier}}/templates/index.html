@@ -187,13 +187,14 @@ chmod go-rwx config.yaml</pre></code>
   simply by editing the URL in your browser’s address bar.
 </p>
 <p>
-  If you know for sure that you will only want to access one project with this tool,
+  If you know for sure that you will only want to access one project (e. g. <code>{% endraw %}{{ cookiecutter.wiki_domain }}{% raw %}</code>) with this tool,
   you can select that as the applicable project,
-  e. g. <code>wikidatawiki</code> (<code>www.wikidata.org</code> in the dropdown list),
   otherwise just leave it at the default “all projects”.
+{% endraw %}{% if cookiecutter.wiki_domain == 'www.wikidata.org' %}
   Note that <code>test.wikidata.org</code> is a separate wiki,
   so if you want to access both real and test Wikidata with the same tool,
   you’ll already need “all projects” access.
+{% endif %}{% raw %}
 </p>
 <p>
   Select which rights you want access to, if any
