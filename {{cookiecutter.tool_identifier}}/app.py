@@ -4,10 +4,13 @@ import flask
 import os
 import random
 import string
+import toolforge
 import yaml
 
 
 app = flask.Flask(__name__)
+
+app.before_request(toolforge.redirect_to_https)
 
 __dir__ = os.path.dirname(__file__)
 try:
