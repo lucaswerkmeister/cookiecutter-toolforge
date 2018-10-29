@@ -16,6 +16,7 @@
         <li><a href="//tools.wmflabs.org/" class="nav-link">Wikimedia Toolforge</a></li>
         <li><a href="https://phabricator.wikimedia.org/source/tool-{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}/" class="nav-link">Source code</a></li>
       </ul>
+      {{ authentication_area() }}
     </nav>
     <main class="container mt-3">
       {% block main %}
