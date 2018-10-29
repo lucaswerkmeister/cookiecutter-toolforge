@@ -234,4 +234,10 @@ chmod go-rwx config.yaml</pre></code>
   You should probably replace at least the first paragraph
   to have a better description than “this tool does things”.
 </p>
+<h3>Write on-wiki documentation</h3>
+<p>
+  The tool’s navbar and the <code>README.md</code> file already link to the tool’s
+  <a href="https://www.wikidata.org/wiki/User:{% endraw %}{{ cookiecutter.user_name | replace(' ', '_') }}/{{ cookiecutter.tool_name | replace(' ', '_') }}{% raw %}">on-wiki documentation page</a>,
+  so you should probably create that and put end-user documentation for the tool there.
+</p>
 {% endblock %}{% endraw %}
