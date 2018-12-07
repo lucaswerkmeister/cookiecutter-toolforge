@@ -98,8 +98,7 @@ def greet(name):
 def praise():
     csrf_error = False
     if flask.request.method == 'POST':
-        token = flask.session.pop('csrf_token', None)
-        if token and token == flask.request.form.get('csrf_token'):
+        if submitted_request_valid():
             flask.session['praise'] = flask.request.form.get('praise', 'praise missing')
         else:
             csrf_error = True
@@ -143,3 +142,37 @@ def oauth_callback():
     access_token = mwoauth.complete('https://{{ cookiecutter.wiki_domain }}/w/index.php', consumer_token, request_token, flask.request.query_string, user_agent=user_agent)
     flask.session['oauth_access_token'] = dict(zip(access_token._fields, access_token))
     return flask.redirect(flask.url_for('index'))
+
+
+def full_url(endpoint, **kwargs):
+    schema=flask.request.headers.get('X-Forwarded-Proto', 'http')
+    return flask.url_for(endpoint, _external=True, _schema=schema, **kwargs)
+
+def submitted_request_valid():
+    """Check whether a submitted POST request is valid.
+
+    If this method returns False, the request might have been issued
+    by an attacker as part of a Cross-Site Request Forgery attack;
+    callers MUST NOT process the request in that case.
+    """
+    real_token = flask.session.pop('csrf_token', None)
+    submitted_token = flask.request.form.get('csrf_token', None)
+    if not real_token:
+        # we never expected a POST
+        return False
+    if not submitted_token:
+        # token got lost or attacker did not supply it
+        return False
+    if submitted_token != real_token:
+        # incorrect token (could be outdated or incorrectly forged)
+        return False
+    if not flask.request.referrer.startswith(full_url('index')):
+        # correct token but not coming from the correct page; for
+        # example, JS running on https://tools.wmflabs.org/tool-a is
+        # allowed to access https://tools.wmflabs.org/tool-b and
+        # extract CSRF tokens from it (since both of these pages are
+        # hosted on the https://tools.wmflabs.org domain), so checking
+        # the Referer header is our only protection against attackers
+        # from other Toolforge tools
+        return False
+    return True
