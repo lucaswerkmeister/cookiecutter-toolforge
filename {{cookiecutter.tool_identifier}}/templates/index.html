@@ -130,8 +130,9 @@ webservice --backend=kubernetes python restart</pre></code>
 <h3>Configure the tool</h3>
 <p>
   You should also create the config file for the tool.
-  It currently serves two purposes:
-  it configures the secret key with which Flask signs the user session to protect it against manipulation,
+  It currently serves three purposes:
+  it configures the secret key with which Flask signs the user session to protect it against manipulation;
+  it sets the path which Flask uses for the session cookie (optional, but recommended for the Toolforge installation);
   and it optionally contains the OAuth secrets your tool needs.
   (Of course, you can add other things to the configuration file if you want to.)
 </p>
@@ -163,6 +164,12 @@ chmod go-rwx config.yaml</pre></code>
   alternatively, you can run the following command to generate and print a random string:
 </p>
 <code><pre>cat /proc/sys/kernel/random/uuid</pre></code>
+<p>
+  The <code>APPLICATION_ROOT</code> option should be uncommented
+  (by removing the <code>#</code> character at the beginning of the line),
+  but only on Toolforge.
+  For the local version, you can just leave this line as it is.
+</p>
 <p>
   The <code>oauth</code> section is only necessary if you want to set up OAuth (see the next section),
   otherwise you can remove it completely.
