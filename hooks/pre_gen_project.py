@@ -1,11 +1,16 @@
-import urllib.error
-import urllib.request
+from __future__ import print_function
+
+try:
+    from urllib.error import HTTPError
+    from urllib.request import urlopen
+except ImportError:
+    from urllib2 import HTTPError, urlopen
 import sys
 
 
 try:
-    urllib.request.urlopen('https://toolsadmin.wikimedia.org/tools/api/toolname/{{ cookiecutter.tool_identifier }}').close()
-except urllib.error.HTTPError: # Striker returns HTTP 406 Not Acceptable for invalid tool names
+    urlopen('https://toolsadmin.wikimedia.org/tools/api/toolname/{{ cookiecutter.tool_identifier }}').close()
+except HTTPError: # Striker returns HTTP 406 Not Acceptable for invalid tool names
     print('\033[1m', file=sys.stderr) # ANSI SGR 1: bold text
     print('''
 The toolsadmin API indicates that "{{ cookiecutter.tool_identifier }}" is not a valid title for a new tool.
