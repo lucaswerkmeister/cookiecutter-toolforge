@@ -145,8 +145,8 @@ def oauth_callback():
 
 
 def full_url(endpoint, **kwargs):
-    schema=flask.request.headers.get('X-Forwarded-Proto', 'http')
-    return flask.url_for(endpoint, _external=True, _schema=schema, **kwargs)
+    scheme=flask.request.headers.get('X-Forwarded-Proto', 'http')
+    return flask.url_for(endpoint, _external=True, _scheme=scheme, **kwargs)
 
 def submitted_request_valid():
     """Check whether a submitted POST request is valid.
