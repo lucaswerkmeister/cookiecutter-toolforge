@@ -178,7 +178,7 @@ def submitted_request_valid():
     return True
 
 @app.after_request
-def denyFrame(response):
+def deny_frame(response):
     """Disallow embedding the tool’s pages in other websites.
 
     If other websites can embed this tool’s pages, e. g. in <iframe>s,
