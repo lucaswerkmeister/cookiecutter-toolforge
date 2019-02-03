@@ -20,6 +20,7 @@ If it’s acting up, try the same command with `restart` instead of `start`.
 
 To update the service, run the following commands after becoming the tool account:
 ```
+webservice --backend=kubernetes python shell
 source ~/www/python/venv/bin/activate
 cd ~/www/python/src
 git fetch
