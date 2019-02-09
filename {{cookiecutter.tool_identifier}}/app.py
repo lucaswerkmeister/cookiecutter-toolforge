@@ -138,7 +138,7 @@ def login():
 
 @app.route('/oauth/callback')
 def oauth_callback():
-    request_token = mwoauth.RequestToken(**flask.session['oauth_request_token'])
+    request_token = mwoauth.RequestToken(**flask.session.pop('oauth_request_token'))
     access_token = mwoauth.complete('https://{{ cookiecutter.wiki_domain }}/w/index.php', consumer_token, request_token, flask.request.query_string, user_agent=user_agent)
     flask.session['oauth_access_token'] = dict(zip(access_token._fields, access_token))
     return flask.redirect(flask.url_for('index'))
