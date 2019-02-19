@@ -5,7 +5,6 @@ import mwapi
 import mwoauth
 import os
 import random
-import requests
 import requests_oauthlib
 import string
 import toolforge
@@ -14,8 +13,7 @@ import yaml
 
 app = flask.Flask(__name__)
 
-toolforge.set_user_agent('{{ cookiecutter.tool_identifier }}', email='{{ cookiecutter.user_email }}')
-user_agent = requests.utils.default_user_agent()
+user_agent = toolforge.set_user_agent('{{ cookiecutter.tool_identifier }}', email='{{ cookiecutter.user_email }}')
 
 __dir__ = os.path.dirname(__file__)
 try:

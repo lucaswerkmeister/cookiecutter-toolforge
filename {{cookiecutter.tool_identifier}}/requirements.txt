@@ -2,6 +2,5 @@ flask
 mwapi
 mwoauth
 pyyaml
-requests
 requests_oauthlib
 toolforge
