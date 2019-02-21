@@ -162,7 +162,7 @@ def submitted_request_valid():
     if submitted_token != real_token:
         # incorrect token (could be outdated or incorrectly forged)
         return False
-    if not flask.request.referrer.startswith(full_url('index')):
+    if not (flask.request.referrer or '').startswith(full_url('index')):
         # correct token but not coming from the correct page; for
         # example, JS running on https://tools.wmflabs.org/tool-a is
         # allowed to access https://tools.wmflabs.org/tool-b and
