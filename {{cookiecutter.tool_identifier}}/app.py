@@ -80,6 +80,15 @@ def authentication_area():
             user_link(identity['username']) +
             flask.Markup(r'</span>'))
 
+def authenticated_session():
+    if 'oauth_access_token' in flask.session:
+        access_token = mwoauth.AccessToken(**flask.session['oauth_access_token'])
+        auth = requests_oauthlib.OAuth1(client_key=consumer_token.key, client_secret=consumer_token.secret,
+                                        resource_owner_key=access_token.key, resource_owner_secret=access_token.secret)
+        return mwapi.Session(host='https://{{ cookiecutter.wiki_domain }}', auth=auth, user_agent=user_agent)
+    else:
+        return None
+
 
 @app.route('/')
 def index():
@@ -100,12 +109,8 @@ def praise():
             csrf_error = True
             flask.g.repeat_form = True
 
-    if 'oauth_access_token' in flask.session:
-        access_token = mwoauth.AccessToken(**flask.session['oauth_access_token'])
-        auth = requests_oauthlib.OAuth1(client_key=consumer_token.key, client_secret=consumer_token.secret,
-                                        resource_owner_key=access_token.key, resource_owner_secret=access_token.secret)
-        session = mwapi.Session(host='https://{{ cookiecutter.wiki_domain }}', auth=auth, user_agent=user_agent)
-
+    session = authenticated_session()
+    if session:
         userinfo = session.get(action='query', meta='userinfo', uiprop='options')['query']['userinfo']
         name = userinfo['name']
         gender = userinfo['options']['gender']
