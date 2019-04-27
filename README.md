@@ -39,6 +39,7 @@ but in brief, this template includes:
 * Examples of Flask routing and templating.
 * Form handling, including CSRF protection.
 * Authentication against Wikimedia sites using OAuth.
+* Optionally, automated code style (Flake8), type (mypy) and functionality (pytest) checks.
 
 ![screenshot](https://raw.githubusercontent.com/lucaswerkmeister/cookiecutter-toolforge/master/screenshot.png)
 
