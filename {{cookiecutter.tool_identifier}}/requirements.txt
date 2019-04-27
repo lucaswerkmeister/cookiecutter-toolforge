@@ -1,6 +1,7 @@
 flask
 mwapi
 mwoauth
-pyyaml
+{% if cookiecutter.set_up_pytest == "True" %}pytest
+{% endif %}pyyaml
 requests_oauthlib
 toolforge

@@ -57,6 +57,17 @@
       This demonstrates OAuth handling and how to make authenticated MediaWiki API requests.
     </p>
   </li>
+  {% endraw %}{% if cookiecutter.set_up_pytest == "True" %}
+  <li>
+    <p>
+      <code>test_app.py</code> is not part of the tool itself,
+      but contains several unit tests for it,
+      written using the <a href="https://docs.pytest.org/en/latest/">pytest</a> framework.
+      You can add your own tests here,
+      and run them using the <code><kbd>pytest</kbd></code> command.
+    </p>
+  </li>
+  {% endif %}{% raw %}
 </ul>
 <p>
   Feel free to rip whatever code you want from these pages
