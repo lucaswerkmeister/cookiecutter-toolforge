@@ -1,4 +1,5 @@
-flask
+{% if cookiecutter.set_up_flake8 == "True" %}flake8
+{% endif %}flask
 mwapi
 mwoauth
 {% if cookiecutter.set_up_pytest == "True" %}pytest

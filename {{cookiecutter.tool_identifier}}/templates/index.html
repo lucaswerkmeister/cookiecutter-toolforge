@@ -74,6 +74,14 @@
   and rearrange it as fits your tool,
   then throw away everything else that you don’t need.
 </p>
+{% endraw%}{% if cookiecutter.set_up_flake8 == "True" or cookiecutter.set_up_mypy == "True" or cookiecutter.set_up_pytest == "True" %}
+<p>
+  Automated checks for this tool have been set up in the <code>Makefile</code>.
+  You can run them using the command <code><kbd>make check</kbd></code>
+  (or just <code><kbd>make</kbd></code>)
+  in the source code directory (where <code>app.py</code> and <code>requirements.txt</code> are).
+</p>
+{% endif %}{% raw %}
 <h2>Next steps</h2>
 <p>Here are some next steps you might want to do.</p>
 <h3>Create the tool account on Wikimedia Toolforge</h3>
