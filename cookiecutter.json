@@ -6,5 +6,6 @@
     "wiki_domain": "www.wikidata.org",
     "set_up_flake8": [true, false],
     "set_up_mypy": [true, false],
-    "set_up_pytest": [true, false]
+    "set_up_pytest": [true, false],
+    "set_up_travis_ci": [true, false]
 }

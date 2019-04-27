@@ -106,6 +106,24 @@ git add .
 git commit -m 'Initial commit'
 git remote add origin vcs@git-ssh.wikimedia.org:source/tool-{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.git
 git push -u origin master</pre></code>
+{% endraw %}{% if cookiecutter.set_up_travis_ci == "True" %}
+<p>
+  To automatically run checks on <a href="https://travis-ci.com/">Travis CI</a>,
+  you’ll also want to push your code to GitHub.
+  <a href="https://github.com/new">Create a new repository</a> named <code>tool-{{ cookiecutter.tool_identifier }}</code>,
+  then add it as a second remote and push your code to it:
+</p>
+<code><pre>git remote add github git@github.com:tool-{{ cookiecutter.tool_identifier }}.git
+git push github master</pre></code>
+<p>
+  Note that you’ll want to push to both remotes, <code>origin</code> and <code>github</code>, after committing code changes.
+  Also, if this is your first time using Travis CI,
+  you have to <a href="https://travis-ci.com/signin">sign in</a> there first
+  and authorize it to access your GitHub repositories.
+  (You can also follow the <a href="https://docs.travis-ci.com/user/tutorial/">Travis CI Tutorial</a> –
+  note that the <code>.travis.yml</code> file it mentions was already created for you by this template.)
+</p>
+{% endif %}{% raw %}
 <h3>Deploy the tool on Wikimedia Toolforge</h3>
 <p>
   SSH into Toolforge
