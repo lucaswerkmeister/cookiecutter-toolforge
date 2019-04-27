@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 
 import flask
-import mwapi
-import mwoauth
+import mwapi{% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
+import mwoauth{% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
 import os
 import random
-import requests_oauthlib
+import requests_oauthlib{% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
 import string
 import toolforge
-import yaml
+{% if cookiecutter.set_up_mypy == "True" %}from typing import Optional
+import werkzeug
+{% endif %}import yaml
 
 
 app = flask.Flask(__name__)
@@ -35,7 +37,7 @@ if 'oauth' in app.config:
 
 
 @app.template_global()
-def csrf_token():
+def csrf_token(){% if cookiecutter.set_up_mypy == "True" %} -> str{% endif %}:
     if 'csrf_token' not in flask.session:
         characters = string.ascii_letters + string.digits
         random_string = ''.join(random.choice(characters) for _ in range(64))
@@ -44,7 +46,7 @@ def csrf_token():
 
 
 @app.template_global()
-def form_value(name):
+def form_value(name{% if cookiecutter.set_up_mypy == "True" %}: str{% endif %}){% if cookiecutter.set_up_mypy == "True" %} -> flask.Markup{% endif %}:
     if 'repeat_form' in flask.g and name in flask.request.form:
         return (flask.Markup(r' value="') +
                 flask.Markup.escape(flask.request.form[name]) +
@@ -54,7 +56,7 @@ def form_value(name):
 
 
 @app.template_global()
-def form_attributes(name):
+def form_attributes(name{% if cookiecutter.set_up_mypy == "True" %}: str{% endif %}){% if cookiecutter.set_up_mypy == "True" %} -> flask.Markup{% endif %}:
     return (flask.Markup(r' id="') +
             flask.Markup.escape(name) +
             flask.Markup(r'" name="') +
@@ -64,7 +66,7 @@ def form_attributes(name):
 
 
 @app.template_filter()
-def user_link(user_name):
+def user_link(user_name{% if cookiecutter.set_up_mypy == "True" %}: str{% endif %}){% if cookiecutter.set_up_mypy == "True" %} -> flask.Markup{% endif %}:
     user_href = 'https://{{ cookiecutter.wiki_domain }}/wiki/User:'
     return (flask.Markup(r'<a href="' + user_href) +
             flask.Markup.escape(user_name.replace(' ', '_')) +
@@ -76,7 +78,7 @@ def user_link(user_name):
 
 
 @app.template_global()
-def authentication_area():
+def authentication_area(){% if cookiecutter.set_up_mypy == "True" %} -> flask.Markup{% endif %}:
     if 'oauth' not in app.config:
         return flask.Markup()
 
@@ -95,7 +97,7 @@ def authentication_area():
             flask.Markup(r'</span>'))
 
 
-def authenticated_session():
+def authenticated_session(){% if cookiecutter.set_up_mypy == "True" %} -> Optional[mwapi.Session]{% endif %}:
     if 'oauth_access_token' not in flask.session:
         return None
 
@@ -111,18 +113,18 @@ def authenticated_session():
 
 
 @app.route('/')
-def index():
+def index(){% if cookiecutter.set_up_mypy == "True" %} -> str{% endif %}:
     return flask.render_template('index.html')
 
 
 @app.route('/greet/<name>')
-def greet(name):
+def greet(name{% if cookiecutter.set_up_mypy == "True" %}: str{% endif %}){% if cookiecutter.set_up_mypy == "True" %} -> str{% endif %}:
     return flask.render_template('greet.html',
                                  name=name)
 
 
 @app.route('/praise', methods=['GET', 'POST'])
-def praise():
+def praise(){% if cookiecutter.set_up_mypy == "True" %} -> str{% endif %}:
     csrf_error = False
     if flask.request.method == 'POST':
         if submitted_request_valid():
@@ -158,7 +160,7 @@ def praise():
 
 
 @app.route('/login')
-def login():
+def login(){% if cookiecutter.set_up_mypy == "True" %} -> werkzeug.Response{% endif %}:
     redirect, request_token = mwoauth.initiate(index_php,
                                                consumer_token,
                                                user_agent=user_agent)
@@ -168,7 +170,7 @@ def login():
 
 
 @app.route('/oauth/callback')
-def oauth_callback():
+def oauth_callback(){% if cookiecutter.set_up_mypy == "True" %} -> werkzeug.Response{% endif %}:
     request_token = mwoauth.RequestToken(
         **flask.session.pop('oauth_request_token'))
     access_token = mwoauth.complete(index_php,
@@ -181,12 +183,12 @@ def oauth_callback():
     return flask.redirect(flask.url_for('index'))
 
 
-def full_url(endpoint, **kwargs):
+def full_url(endpoint{% if cookiecutter.set_up_mypy == "True" %}: str{% endif %}, **kwargs){% if cookiecutter.set_up_mypy == "True" %} -> str{% endif %}:
     scheme = flask.request.headers.get('X-Forwarded-Proto', 'http')
     return flask.url_for(endpoint, _external=True, _scheme=scheme, **kwargs)
 
 
-def submitted_request_valid():
+def submitted_request_valid(){% if cookiecutter.set_up_mypy == "True" %} -> bool{% endif %}:
     """Check whether a submitted POST request is valid.
 
     If this method returns False, the request might have been issued
@@ -217,7 +219,7 @@ def submitted_request_valid():
 
 
 @app.after_request
-def deny_frame(response):
+def deny_frame(response{% if cookiecutter.set_up_mypy == "True" %}: flask.Response{% endif %}){% if cookiecutter.set_up_mypy == "True" %} -> flask.Response{% endif %}:
     """Disallow embedding the tool’s pages in other websites.
 
     If other websites can embed this tool’s pages, e. g. in <iframe>s,

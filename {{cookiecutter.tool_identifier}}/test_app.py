@@ -1,4 +1,4 @@
-import pytest
+import pytest{% if cookiecutter.set_up_mypy %}  # type: ignore{% endif %}
 import re
 
 {% set tool_identifier_python = cookiecutter.tool_identifier | replace('-', '_') %}import app as {{ tool_identifier_python }}
