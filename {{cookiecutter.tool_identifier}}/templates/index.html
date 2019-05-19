@@ -140,14 +140,14 @@ git push github master</pre></code>
   We do this from within a Kubernetes shell,
   to ensure that we’re using the same Python version that the tool will later run under.
 </p>
-<code><pre>webservice --backend=kubernetes python shell
+<code><pre>webservice --backend=kubernetes python3.5 shell
 python3 -m venv ~/www/python/venv
 source ~/www/python/venv/bin/activate
 pip install --upgrade pip
 pip install -r ~/www/python/src/requirements.txt
 exit</code></pre>
 <p>Start the webservice.</p>
-<code><pre>webservice --backend=kubernetes python start</pre></code>
+<code><pre>webservice --backend=kubernetes python3.5 start</pre></code>
 <p>
   Your tool should now be running:
   visit <a href="https://tools.wmflabs.org/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}">tools.wmflabs.org/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}</a> to check.
@@ -155,7 +155,7 @@ exit</code></pre>
   the update process will consist of the following commands:
 </p>
 <code><pre>git -C ~/www/python/src pull
-webservice --backend=kubernetes python restart</pre></code>
+webservice --backend=kubernetes python3.5 restart</pre></code>
 <p>
   If the tool requires any new dependencies
   (that is, if the <code>requirements.txt</code> file was changed),
