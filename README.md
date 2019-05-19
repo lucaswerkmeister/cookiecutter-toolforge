@@ -21,10 +21,11 @@ cookiecutter gh:lucaswerkmeister/cookiecutter-toolforge
 You will be prompted for some metadata about the tool,
 and then the resulting source code will be placed into a directory named after the tool’s identifier
 (the first thing you were asked for).
-Change into that directory and run the tool locally:
+Change into that directory, install dependencies and run the tool locally:
 
 ```sh
 cd <tool_identifier>
+pip install -r requirements.txt
 FLASK_ENV=development FLASK_APP=app.py flask run
 ```
 
