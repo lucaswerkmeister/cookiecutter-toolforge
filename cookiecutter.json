@@ -4,8 +4,8 @@
     "user_name": "Example User",
     "user_email": "tools.{{ cookiecutter.tool_identifier }}@tools.wmflabs.org",
     "wiki_domain": "www.wikidata.org",
-    "set_up_flake8": [true, false],
-    "set_up_mypy": [true, false],
-    "set_up_pytest": [true, false],
-    "set_up_travis_ci": [true, false]
+    "set_up_flake8": [false, true],
+    "set_up_mypy": [false, true],
+    "set_up_pytest": [false, true],
+    "set_up_travis_ci": [false, true]
 }
