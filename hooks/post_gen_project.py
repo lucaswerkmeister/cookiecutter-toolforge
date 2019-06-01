@@ -2,6 +2,10 @@ import os
 import sys
 
 
+if not {{ cookiecutter.set_up_mypy }}:
+    os.remove('stubs/toolforge.pyi')
+    os.rmdir('stubs')
+
 if not {{ cookiecutter.set_up_pytest }}:
     os.remove('test_app.py')
 
