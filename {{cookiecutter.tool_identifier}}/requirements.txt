@@ -3,7 +3,7 @@
 mwapi
 mwoauth
 {% if cookiecutter.set_up_pytest == "True" %}pytest
-{% endif %}{% if cookiecutter.set_up_mypy == "True" %}mypy==0.670
+{% endif %}{% if cookiecutter.set_up_mypy == "True" %}mypy
 {% endif %}pyyaml
 requests_oauthlib
 toolforge
