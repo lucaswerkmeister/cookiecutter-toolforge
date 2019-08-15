@@ -45,6 +45,8 @@
       This isn’t the only way to do <abbr title="cross-site request forgery">CSRF</abbr> protection,
       but it’s one fairly simple implementation;
       <strong>you should never ever have forms without any CSRF protection.</strong>
+      (If you don’t want to implement CSRF error handling in every form endpoint,
+      take a look at the <code>require_valid_submitted_request</code> function.)
     </p>
     <p>
       This page also includes OAuth support.

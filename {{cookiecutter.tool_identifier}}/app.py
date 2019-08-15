@@ -8,7 +8,7 @@ import random
 import requests_oauthlib{% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
 import string
 import toolforge
-{% if cookiecutter.set_up_mypy == "True" %}from typing import Optional
+{% if cookiecutter.set_up_mypy == "True" %}from typing import Optional, Tuple
 import werkzeug
 {% endif %}import yaml
 
@@ -216,6 +216,18 @@ def submitted_request_valid(){% if cookiecutter.set_up_mypy == "True" %} -> bool
         # from other Toolforge tools
         return False
     return True
+
+
+# If you don’t want to handle CSRF protection in every POST handler,
+# you can instead uncomment the @app.before_request decorator
+# on the following function,
+# which will raise a very generic error for any invalid POST.
+# Otherwise, you can remove the whole function.
+# @app.before_request
+def require_valid_submitted_request(){% if cookiecutter.set_up_mypy == "True" %} -> Optional[Tuple[str, int]]{% endif %}:
+    if flask.request.method == 'POST' and not submitted_request_valid():
+        return 'CSRF error', 400  # stop request handling
+    return None  # continue request handling
 
 
 @app.after_request
