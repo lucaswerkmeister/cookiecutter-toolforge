@@ -169,9 +169,8 @@ webservice --backend=kubernetes python3.5 restart</pre></code>
 <h3>Configure the tool</h3>
 <p>
   You should also create the config file for the tool.
-  It currently serves three purposes:
-  it configures the secret key with which Flask signs the user session to protect it against manipulation;
-  it sets the path which Flask uses for the session cookie (optional, but recommended for the Toolforge installation);
+  It currently serves two purposes:
+  it configures the secret key with which Flask signs the user session to protect it against manipulation,
   and it optionally contains the OAuth secrets your tool needs.
   (Of course, you can add other things to the configuration file if you want to.)
 </p>
