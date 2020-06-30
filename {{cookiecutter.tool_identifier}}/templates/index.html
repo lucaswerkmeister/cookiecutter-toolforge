@@ -138,18 +138,23 @@ git push github master</pre></code>
 <p>Clone the source code repository.</p>
 <code><pre>git clone https://phabricator.wikimedia.org/source/tool-{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.git ~/www/python/src/</pre></code>
 <p>
+  Link the <code>service.template</code> file into the tool’s home directory.
+  This sets the default arguments for the <code>webservice</code> commands below.
+</p>
+<code><pre>ln -s ~/www/python/src/service.template .</pre></code>
+<p>
   Set up the Python virtual environment.
   We do this from within a Kubernetes shell,
   to ensure that we’re using the same Python version that the tool will later run under.
 </p>
-<code><pre>webservice --backend=kubernetes python3.5 shell
+<code><pre>webservice shell
 python3 -m venv ~/www/python/venv
 source ~/www/python/venv/bin/activate
 pip install --upgrade pip
 pip install -r ~/www/python/src/requirements.txt
 exit</code></pre>
 <p>Start the webservice.</p>
-<code><pre>webservice --backend=kubernetes python3.5 start</pre></code>
+<code><pre>webservice start</pre></code>
 <p>
   Your tool should now be running:
   visit <a href="https://{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.toolforge.org/">{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.toolforge.org</a> to check.
@@ -157,7 +162,7 @@ exit</code></pre>
   the update process will consist of the following commands:
 </p>
 <code><pre>git -C ~/www/python/src pull
-webservice --backend=kubernetes python3.5 restart</pre></code>
+webservice restart</pre></code>
 <p>
   If the tool requires any new dependencies
   (that is, if the <code>requirements.txt</code> file was changed),
