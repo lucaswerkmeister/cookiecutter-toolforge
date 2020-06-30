@@ -1,6 +1,6 @@
 # {{ cookiecutter.tool_name }}
 
-[This tool](https://tools.wmflabs.org/{{ cookiecutter.tool_identifier }}/) does things.
+[This tool](https://{{ cookiecutter.tool_identifier }}.toolforge.org/) does things.
 
 For more information,
 please see the tool’s [on-wiki documentation page](https://{{ cookiecutter.wiki_domain }}/wiki/User:{{ cookiecutter.user_name | replace(' ', '_') }}/{{ cookiecutter.tool_name | replace(' ', '_') }}).

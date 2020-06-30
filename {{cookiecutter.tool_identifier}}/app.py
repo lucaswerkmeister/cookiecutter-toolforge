@@ -206,15 +206,6 @@ def submitted_request_valid(){% if cookiecutter.set_up_mypy == "True" %} -> bool
     if submitted_token != real_token:
         # incorrect token (could be outdated or incorrectly forged)
         return False
-    if not (flask.request.referrer or '').startswith(full_url('index')):
-        # correct token but not coming from the correct page; for
-        # example, JS running on https://tools.wmflabs.org/tool-a is
-        # allowed to access https://tools.wmflabs.org/tool-b and
-        # extract CSRF tokens from it (since both of these pages are
-        # hosted on the https://tools.wmflabs.org domain), so checking
-        # the Referer header is our only protection against attackers
-        # from other Toolforge tools
-        return False
     return True
 
 
@@ -234,10 +225,11 @@ def require_valid_submitted_request(){% if cookiecutter.set_up_mypy == "True" %}
 def deny_frame(response{% if cookiecutter.set_up_mypy == "True" %}: flask.Response{% endif %}){% if cookiecutter.set_up_mypy == "True" %} -> flask.Response{% endif %}:
     """Disallow embedding the tool’s pages in other websites.
 
-    If other websites can embed this tool’s pages, e. g. in <iframe>s,
-    other tools hosted on tools.wmflabs.org can send arbitrary web
-    requests from this tool’s context, bypassing the referrer-based
-    CSRF protection.
+    Not every tool can be usefully embedded in other websites, but
+    allowing embedding can expose the tool to clickjacking
+    vulnerabilities, so err on the side of caution and disallow
+    embedding. This can be removed (possibly only for certain pages)
+    as long as other precautions against clickjacking are taken.
     """
     response.headers['X-Frame-Options'] = 'deny'
     return response

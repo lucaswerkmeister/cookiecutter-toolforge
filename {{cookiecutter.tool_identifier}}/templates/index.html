@@ -129,7 +129,7 @@ git push github master</pre></code>
 <h3>Deploy the tool on Wikimedia Toolforge</h3>
 <p>
   SSH into Toolforge
-  (<code>login.tools.wmflabs.org</code>;
+  (<code>login.toolforge.org</code>;
   see <a href="https://wikitech.wikimedia.org/wiki/Help:Access">the documentation on Wikitech</a> for more information),
   and then run <code>become {% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}</code>.
 </p>
@@ -152,7 +152,7 @@ exit</code></pre>
 <code><pre>webservice --backend=kubernetes python3.5 start</pre></code>
 <p>
   Your tool should now be running:
-  visit <a href="https://tools.wmflabs.org/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}">tools.wmflabs.org/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}</a> to check.
+  visit <a href="https://{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.toolforge.org/">{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.toolforge.org</a> to check.
   Generally, any time you make changes,
   the update process will consist of the following commands:
 </p>
@@ -204,12 +204,6 @@ chmod go-rwx config.yaml</pre></code>
 </p>
 <code><pre>cat /proc/sys/kernel/random/uuid</pre></code>
 <p>
-  The <code>APPLICATION_ROOT</code> option should be uncommented
-  (by removing the <code>#</code> character at the beginning of the line),
-  but only on Toolforge.
-  For the local version, you can just leave this line as it is.
-</p>
-<p>
   The <code>oauth</code> section is only necessary if you want to set up OAuth (see the next section),
   otherwise you can remove it completely.
 </p>
@@ -223,11 +217,11 @@ chmod go-rwx config.yaml</pre></code>
 </p>
 <p>
   For the OAuth callback URL,
-  specify <code>https://tools.wmflabs.org/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}/oauth/callback</code>
+  specify <code>https://{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.toolforge.org/oauth/callback</code>
   (assuming you didn’t mess with the route of the <code>oauth_callback</code> function).
   You <em>can</em> use this consumer for local testing as well, if you want:
   the login will redirect you to some URL like
-  <code>https://tools.wmflabs.org/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}/oauth/callback?oauth_verifier=<var>xxx</var>&oauth_token=<var>yyy</var></code>,
+  <code>https://{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.toolforge.org/oauth/callback?oauth_verifier=<var>xxx</var>&oauth_token=<var>yyy</var></code>,
   which you can manually rewrite to something like
   <code>http://localhost:5000/oauth/callback?oauth_verifier=<var>xxx</var>&oauth_token=<var>yyy</var></code>,
   simply by editing the URL in your browser’s address bar.
