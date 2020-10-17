@@ -183,6 +183,12 @@ def oauth_callback(){% if cookiecutter.set_up_mypy == "True" %} -> werkzeug.Resp
     return flask.redirect(flask.url_for('index'))
 
 
+@app.route('/logout')
+def logout(){% if cookiecutter.set_up_mypy == "True" %} -> werkzeug.Response{% endif %}:
+    flask.session.pop('oauth_access_token', None)
+    return flask.redirect(flask.url_for('index'))
+
+
 def full_url(endpoint{% if cookiecutter.set_up_mypy == "True" %}: str{% endif %}, **kwargs){% if cookiecutter.set_up_mypy == "True" %} -> str{% endif %}:
     scheme = flask.request.headers.get('X-Forwarded-Proto', 'http')
     return flask.url_for(endpoint, _external=True, _scheme=scheme, **kwargs)
