@@ -55,9 +55,9 @@ def test_praise(client):
     assert '<h2>How cool!</h2>' in html
     assert 'You rock!' not in html
 
-    # try to update praise with expired CSRF token
+    # try to update praise with wrong CSRF token
     response = client.post('/praise',
-                           data={'csrf_token': csrf_token,
+                           data={'csrf_token': 'wrong ' + csrf_token,
                                  'praise': 'Boo!'},
                            headers=headers)
     html = response.get_data(as_text=True)
