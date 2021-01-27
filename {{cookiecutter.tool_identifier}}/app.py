@@ -166,6 +166,9 @@ def login(){% if cookiecutter.set_up_mypy == "True" %} -> werkzeug.Response{% en
                                                user_agent=user_agent)
     flask.session['oauth_request_token'] = dict(zip(request_token._fields,
                                                     request_token))
+    return_url = flask.request.referrer
+    if return_url and return_url.startswith(full_url('index')):
+        flask.session['oauth_redirect_target'] = return_url
     return flask.redirect(redirect)
 
 
@@ -181,7 +184,8 @@ def oauth_callback(){% if cookiecutter.set_up_mypy == "True" %} -> werkzeug.Resp
     flask.session['oauth_access_token'] = dict(zip(access_token._fields,
                                                    access_token))
     flask.session.pop('csrf_token', None)
-    return flask.redirect(flask.url_for('index'))
+    redirect_target = flask.session.pop('oauth_redirect_target', None)
+    return flask.redirect(redirect_target or flask.url_for('index'))
 
 
 @app.route('/logout')
