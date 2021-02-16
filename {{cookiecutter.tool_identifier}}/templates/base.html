@@ -9,6 +9,7 @@
     {% endblock head %}
   </head>
   <body>
+    <a href="#main" class="sr-only sr-only-focusable">Skip to main content</a>
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
       <a href="{{ url_for('index') }}" class="navbar-brand">{% endraw %}{{ cookiecutter.tool_name }}{% raw %}</a>
       <ul class="navbar-nav mr-auto">
@@ -18,7 +19,7 @@
       </ul>
       {{ authentication_area() }}
     </nav>
-    <main class="container mt-3">
+    <main id="main" class="container mt-3">
       {% block main %}
       {% endblock main %}
     </main>
