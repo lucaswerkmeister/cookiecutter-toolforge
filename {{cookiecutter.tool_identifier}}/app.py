@@ -82,18 +82,16 @@ def authentication_area(){% if cookiecutter.set_up_mypy == "True" %} -> flask.Ma
     if 'oauth' not in app.config:
         return flask.Markup()
 
-    if 'oauth_access_token' not in flask.session:
+    session = authenticated_session()
+    if session is None:
         return (flask.Markup(r'<a id="login" class="navbar-text" href="') +
                 flask.Markup.escape(flask.url_for('login')) +
                 flask.Markup(r'">Log in</a>'))
 
-    access_token = mwoauth.AccessToken(**flask.session['oauth_access_token'])
-    identity = mwoauth.identify(index_php,
-                                consumer_token,
-                                access_token)
-
+    userinfo = session.get(action='query',
+                           meta='userinfo')['query']['userinfo']
     return (flask.Markup(r'<span class="navbar-text">Logged in as ') +
-            user_link(identity['username']) +
+            user_link(userinfo['name']) +
             flask.Markup(r'</span>'))
 
 
