@@ -8,7 +8,7 @@ import random
 import requests_oauthlib{% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
 import string
 import toolforge
-{% if cookiecutter.set_up_mypy == "True" %}from typing import Optional, Tuple
+{% if cookiecutter.set_up_mypy == "True" %}from typing import Optional, Tuple, Union
 import werkzeug
 {% endif %}import yaml
 
@@ -171,9 +171,16 @@ def login(){% if cookiecutter.set_up_mypy == "True" %} -> werkzeug.Response{% en
 
 
 @app.route('/oauth/callback')
-def oauth_callback(){% if cookiecutter.set_up_mypy == "True" %} -> werkzeug.Response{% endif %}:
-    request_token = mwoauth.RequestToken(
-        **flask.session.pop('oauth_request_token'))
+def oauth_callback(){% if cookiecutter.set_up_mypy == "True" %} -> Union[werkzeug.Response, str]{% endif %}:
+    oauth_request_token = flask.session.pop('oauth_request_token', None)
+    if oauth_request_token is None:
+        already_logged_in = 'oauth_access_token' in flask.session
+        query_string = flask.request.query_string\
+                                    .decode(flask.request.url_charset)
+        return flask.render_template('error-oauth-callback.html',
+                                     already_logged_in=already_logged_in,
+                                     query_string=query_string)
+    request_token = mwoauth.RequestToken(oauth_request_token)
     access_token = mwoauth.complete(index_php,
                                     consumer_token,
                                     request_token,

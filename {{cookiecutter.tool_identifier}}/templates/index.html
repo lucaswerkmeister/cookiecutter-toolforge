@@ -219,12 +219,10 @@ chmod go-rwx config.yaml</pre></code>
   For the OAuth callback URL,
   specify <code>https://{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.toolforge.org/oauth/callback</code>
   (assuming you didn’t mess with the route of the <code>oauth_callback</code> function).
-  You <em>can</em> use this consumer for local testing as well, if you want:
-  the login will redirect you to some URL like
-  <code>https://{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.toolforge.org/oauth/callback?oauth_verifier=<var>xxx</var>&oauth_token=<var>yyy</var></code>,
-  which you can manually rewrite to something like
-  <code>http://localhost:5000/oauth/callback?oauth_verifier=<var>xxx</var>&oauth_token=<var>yyy</var></code>,
-  simply by editing the URL in your browser’s address bar.
+  You can use this consumer for local testing as well, if you want:
+  the login will redirect you to the OAuth callback on the Toolforge version of the tool,
+  which will recognize that it’s not expecting to be called,
+  and include a link to <code>localhost:5000</code> that you can follow in order to complete the OAuth callback there.
 </p>
 <p>
   If you know for sure that you will only want to access one project (e. g. <code>{% endraw %}{{ cookiecutter.wiki_domain }}{% raw %}</code>) with this tool,

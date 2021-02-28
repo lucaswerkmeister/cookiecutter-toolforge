@@ -1,0 +1,22 @@
+{% raw %}{% extends "base.html" %}
+{% block main %}
+<div class="alert alert-info" role="alert">
+  This login attempt didn’t quite work out.
+  {% if already_logged_in %}
+  Since you’re already logged in, you probably want to
+  <a href="{{ url_for('index') }}" class="btn btn-primary">
+    return to the main page.
+  </a>
+  {% else %}
+  <a href="{{ url_for('login') }}" class="btn btn-primary">
+    Try again?
+  </a>
+  {% endif %}
+</div>
+<aside>
+  If you’re a developer working on this tool – and only then! –
+  you might want to
+  <a href="http://localhost:5000/oauth/callback?{{ query_string }}">
+    switch to the localhost version instead</a>.
+</aside>
+{% endblock main %}{% endraw %}
