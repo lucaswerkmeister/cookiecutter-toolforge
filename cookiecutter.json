@@ -2,7 +2,7 @@
     "tool_identifier": "example-tool",
     "tool_name": "Example Tool",
     "user_name": "Example User",
-    "user_email": "tools.{{ cookiecutter.tool_identifier }}@tools.wmflabs.org",
+    "user_email": "tools.{{ cookiecutter.tool_identifier }}@toolforge.org",
     "wiki_domain": "www.wikidata.org",
     "set_up_flake8": [false, true],
     "set_up_mypy": [false, true],
