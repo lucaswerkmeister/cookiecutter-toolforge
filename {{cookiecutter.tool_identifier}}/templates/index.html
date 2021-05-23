@@ -103,11 +103,10 @@
   Next, push the source code from wherever you’re currently running it to Phabricator.
   (The following commands should be run from the directory where <code>app.py</code> and <code>requirements.txt</code> are.)
 </p>
-<code><pre>git init .
-git add .
+<code><pre>git add .
 git commit -m 'Initial commit'
 git remote add origin vcs@git-ssh.wikimedia.org:source/tool-{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.git
-git push -u origin master</pre></code>
+git push -u origin main</pre></code>
 {% endraw %}{% if cookiecutter.set_up_github_ci == "True" %}
 <p>
   To automatically run checks on <a href="https://github.com/features/actions">GitHub Actions</a>
@@ -117,7 +116,7 @@ git push -u origin master</pre></code>
   then add it as a second remote and push your code to it:
 </p>
 <code><pre>git remote add github git@github.com:tool-{{ cookiecutter.tool_identifier }}.git
-git push github master</pre></code>
+git push github main</pre></code>
 <p>
   Note that you’ll want to push to both remotes, <code>origin</code> and <code>github</code>, after committing code changes.
 </p>

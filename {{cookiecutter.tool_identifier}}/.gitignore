@@ -1,0 +1,3 @@
+/config.yaml
+/__pycache__/{% if cookiecutter.set_up_pytest == "True" %}
+/.pytest_cache/{% endif %}

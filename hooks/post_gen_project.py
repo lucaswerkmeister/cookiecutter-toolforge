@@ -1,5 +1,19 @@
 import os
+import subprocess
 import sys
+
+
+branch = subprocess.run(['git', 'config',
+                         '--default', 'main',
+                         '--get', 'init.defaultBranch'],
+                        capture_output=True)\
+                   .stdout\
+                   .decode('utf8')\
+                   .strip()
+subprocess.run(['git', 'init',
+                '-b', branch,
+                '-q',
+                '.'])
 
 
 if not {{ cookiecutter.set_up_mypy }}:
