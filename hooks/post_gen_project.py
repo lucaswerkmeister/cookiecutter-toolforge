@@ -9,16 +9,17 @@ if not {{ cookiecutter.set_up_mypy }}:
 if not {{ cookiecutter.set_up_pytest }}:
     os.remove('test_app.py')
 
+if not {{ cookiecutter.set_up_github_ci }}:
+    os.remove('.github/workflows/test.yaml')
+    os.rmdir('.github/workflows')
+    os.rmdir('.github')
+
 if not {{ cookiecutter.set_up_flake8 }} and \
    not {{ cookiecutter.set_up_mypy }} and \
    not {{ cookiecutter.set_up_pytest }}:
     os.remove('Makefile')
 
-    if not {{ cookiecutter.set_up_github_ci }}:
-        os.remove('.github/workflows/test.yaml')
-        os.rmdir('.github/workflows')
-        os.rmdir('.github')
-    else:
+    if {{ cookiecutter.set_up_github_ci }}:
         print('\033[1m', file=sys.stderr)  # ANSI SGR 1: bold text
         print('''
 
