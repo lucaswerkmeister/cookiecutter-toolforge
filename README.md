@@ -18,7 +18,7 @@ Once `cookiecutter` is installed, you can create a new tool project with the fol
 cookiecutter gh:lucaswerkmeister/cookiecutter-toolforge
 ```
 
-You will be prompted for some metadata about the tool,
+You will be prompted for some metadata about the tool (see [below](#Variables) for details),
 and then the resulting source code will be placed into a directory named after the tool’s identifier
 (the first thing you were asked for).
 Change into that directory, install dependencies and run the tool locally:
@@ -30,6 +30,33 @@ FLASK_ENV=development FLASK_APP=app.py flask run
 ```
 
 Then, open http://localhost:5000/ and follow the further instructions there.
+
+### Variables
+
+You will be prompted for the following variables:
+
+* **tool_identifier**: The identifier of the tool, which will be used in the URL.
+  Usually only uses letters and hyphens, sometimes also digits or underscores.
+* **tool_name**: The name of the tool. This can be any text.
+* **user_name**: Your user name on Wikimedia wikis.
+  This is mainly used to generate the link to the tool’s documentation:
+  by default, the link will point to a subpage of your user page.
+  (You can change this, of course.)
+* **wiki_domain**: The domain name of the main wiki the tool will target.
+  This is used for the documentation link and also for OAuth.
+  If your tool targets several wikis, you can use `meta.wikimedia.org`.
+* **set_up_flake8**: Whether to set up [Flake8](https://flake8.pycqa.org/), a Python code style checker.
+  Enable this if you want to use Flake8 to ensure a consistent code style (e.g. indentation or spacing).
+  Flake8 can also catch some programming mistakes, such as unused variables or imports.
+* **set_up_mypy**: Whether to set up [mypy](http://mypy-lang.org/), a Python static type checker.
+  Enable this if you want to annotate your code with static types and use mypy to check them.
+  mypy can catch more mistakes than Flake8, but can also be harder to work with;
+  it’s more useful for more complicated tools with larger codebases.
+* **set_up_pytest**: Whether to set up [pytest](https://docs.pytest.org/), a Python testing framework.
+  Enable this if you want to write tests for your tool and run them with pytest.
+  Automated tests are very useful to ensure that your tool keeps working when the code is changed later.
+* **set_up_github_ci**: Whether to set up Continuous Integration using [GitHub Actions](https://github.com/features/actions).
+  Enable this if you plan to publish your tool’s code on GitHub and want to automatically run the checks configured with the previous variables.
 
 ## Features
 
