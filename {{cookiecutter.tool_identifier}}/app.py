@@ -180,7 +180,7 @@ def oauth_callback(){% if cookiecutter.set_up_mypy == "True" %} -> Union[werkzeu
         return flask.render_template('error-oauth-callback.html',
                                      already_logged_in=already_logged_in,
                                      query_string=query_string)
-    request_token = mwoauth.RequestToken(oauth_request_token)
+    request_token = mwoauth.RequestToken(**oauth_request_token)
     access_token = mwoauth.complete(index_php,
                                     consumer_token,
                                     request_token,
