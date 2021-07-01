@@ -115,7 +115,7 @@ git push -u origin main</code></pre>
   <a href="https://github.com/new">Create a new repository</a> named <code>tool-{{ cookiecutter.tool_identifier }}</code>,
   then add it as a second remote and push your code to it:
 </p>
-<pre><code>git remote add github git@github.com:tool-{{ cookiecutter.tool_identifier }}.git
+<pre><code>git remote add github git@github.com:<var>YourUserName</var>/tool-{{ cookiecutter.tool_identifier }}.git
 git push github main</code></pre>
 <p>
   Note that you’ll want to push to both remotes, <code>origin</code> and <code>github</code>, after committing code changes.
