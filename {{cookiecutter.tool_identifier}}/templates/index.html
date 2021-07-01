@@ -103,10 +103,10 @@
   Next, push the source code from wherever you’re currently running it to Phabricator.
   (The following commands should be run from the directory where <code>app.py</code> and <code>requirements.txt</code> are.)
 </p>
-<code><pre>git add .
+<pre><code>git add .
 git commit -m 'Initial commit'
 git remote add origin vcs@git-ssh.wikimedia.org:source/tool-{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.git
-git push -u origin main</pre></code>
+git push -u origin main</code></pre>
 {% endraw %}{% if cookiecutter.set_up_github_ci == "True" %}
 <p>
   To automatically run checks on <a href="https://github.com/features/actions">GitHub Actions</a>
@@ -115,8 +115,8 @@ git push -u origin main</pre></code>
   <a href="https://github.com/new">Create a new repository</a> named <code>tool-{{ cookiecutter.tool_identifier }}</code>,
   then add it as a second remote and push your code to it:
 </p>
-<code><pre>git remote add github git@github.com:tool-{{ cookiecutter.tool_identifier }}.git
-git push github main</pre></code>
+<pre><code>git remote add github git@github.com:tool-{{ cookiecutter.tool_identifier }}.git
+git push github main</code></pre>
 <p>
   Note that you’ll want to push to both remotes, <code>origin</code> and <code>github</code>, after committing code changes.
 </p>
@@ -129,30 +129,30 @@ git push github main</pre></code>
   and then run <code>become {% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}</code>.
 </p>
 <p>Create the base directory for the tool.</p>
-<code><pre>mkdir -p ~/www/python/</pre></code>
+<pre><code>mkdir -p ~/www/python/</code></pre>
 <p>Clone the source code repository.</p>
-<code><pre>git clone https://phabricator.wikimedia.org/source/tool-{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.git ~/www/python/src/</pre></code>
+<pre><code>git clone https://phabricator.wikimedia.org/source/tool-{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.git ~/www/python/src/</code></pre>
 <p>
   Set up the Python virtual environment.
   We do this from within a Kubernetes shell,
   to ensure that we’re using the same Python version that the tool will later run under.
 </p>
-<code><pre>webservice shell
+<pre><code>webservice shell
 python3 -m venv ~/www/python/venv
 source ~/www/python/venv/bin/activate
 pip install --upgrade pip
 pip install -r ~/www/python/src/requirements.txt
 exit</code></pre>
 <p>Start the webservice.</p>
-<code><pre>webservice start</pre></code>
+<pre><code>webservice start</code></pre>
 <p>
   Your tool should now be running:
   visit <a href="https://{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.toolforge.org/">{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.toolforge.org</a> to check.
   Generally, any time you make changes,
   the update process will consist of the following commands:
 </p>
-<code><pre>git -C ~/www/python/src pull
-webservice restart</pre></code>
+<pre><code>git -C ~/www/python/src pull
+webservice restart</code></pre>
 <p>
   If the tool requires any new dependencies
   (that is, if the <code>requirements.txt</code> file was changed),
@@ -170,8 +170,8 @@ webservice restart</pre></code>
   (Of course, you can add other things to the configuration file if you want to.)
 </p>
 <p>To start working with the config file, run the following two commands:</p>
-<code><pre>cp config.yaml.example config.yaml
-chmod go-rwx config.yaml</pre></code>
+<pre><code>cp config.yaml.example config.yaml
+chmod go-rwx config.yaml</code></pre>
 <p>
   It is <em>imperative</em> that you make the file unreadable to anyone else (with the second command)
   before you start to actually fill it with real values:
@@ -189,14 +189,14 @@ chmod go-rwx config.yaml</pre></code>
   if you’re not familiar with those yet,
   <a href="http://www.wikidata.org/entity/Q306101">nano</a> is a fairly user-friendly option:
 </p>
-<code><pre>nano config.yaml</pre></code>
+<pre><code>nano config.yaml</code></pre>
 <p>
   For the <code>SECRET_KEY</code> option,
   you should pick some long (about 50 characters), unguessable string.
   If you want, you can just mash your keyboard for a bit;
   alternatively, you can run the following command to generate and print a random string:
 </p>
-<code><pre>cat /proc/sys/kernel/random/uuid</pre></code>
+<pre><code>cat /proc/sys/kernel/random/uuid</code></pre>
 <p>
   The <code>oauth</code> section is only necessary if you want to set up OAuth (see the next section),
   otherwise you can remove it completely.
