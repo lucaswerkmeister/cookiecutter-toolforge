@@ -133,11 +133,6 @@ git push github main</pre></code>
 <p>Clone the source code repository.</p>
 <code><pre>git clone https://phabricator.wikimedia.org/source/tool-{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.git ~/www/python/src/</pre></code>
 <p>
-  Link the <code>service.template</code> file into the tool’s home directory.
-  This sets the default arguments for the <code>webservice</code> commands below.
-</p>
-<code><pre>ln -s ~/www/python/src/service.template .</pre></code>
-<p>
   Set up the Python virtual environment.
   We do this from within a Kubernetes shell,
   to ensure that we’re using the same Python version that the tool will later run under.
