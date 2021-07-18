@@ -4,6 +4,7 @@ mwapi
 mwoauth
 {% if cookiecutter.set_up_pytest == "True" %}pytest
 {% endif %}{% if cookiecutter.set_up_mypy == "True" %}mypy
-{% endif %}pyyaml
+{% endif %}PyYAML
 requests_oauthlib
-toolforge
+toolforge{% if cookiecutter.set_up_mypy == "True" %}
+types-PyYAML{% endif %}
