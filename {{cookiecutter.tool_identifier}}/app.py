@@ -45,7 +45,7 @@ def csrf_token(){% if cookiecutter.set_up_mypy == "True" %} -> str{% endif %}:
     return flask.session['csrf_token']
 
 
-@app.template_global()
+@app.template_global(){% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
 def form_value(name{% if cookiecutter.set_up_mypy == "True" %}: str{% endif %}){% if cookiecutter.set_up_mypy == "True" %} -> flask.Markup{% endif %}:
     if 'repeat_form' in flask.g and name in flask.request.form:
         return (flask.Markup(r' value="') +
@@ -55,14 +55,14 @@ def form_value(name{% if cookiecutter.set_up_mypy == "True" %}: str{% endif %}){
         return flask.Markup()
 
 
-@app.template_global()
+@app.template_global(){% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
 def form_attributes(name{% if cookiecutter.set_up_mypy == "True" %}: str{% endif %}){% if cookiecutter.set_up_mypy == "True" %} -> flask.Markup{% endif %}:
     return (flask.Markup(r' id="') +
             flask.Markup.escape(name) +
             flask.Markup(r'" name="') +
             flask.Markup.escape(name) +
             flask.Markup(r'" ') +
-            form_value(name))
+            form_value(name)){% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
 
 
 @app.template_filter()
