@@ -3,7 +3,6 @@
 import flask
 import mwapi{% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
 import mwoauth{% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
-import os
 import random
 import requests_oauthlib{% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
 import string
@@ -19,18 +18,17 @@ user_agent = toolforge.set_user_agent(
     '{{ cookiecutter.tool_identifier }}',
     email='{{ cookiecutter.user_email }}')
 
-__dir__ = os.path.dirname(__file__)
-try:
-    with open(os.path.join(__dir__, 'config.yaml')) as config_file:
-        app.config.update(yaml.safe_load(config_file))
-except FileNotFoundError:
+has_config = app.config.from_file('config.yaml',
+                                  load=yaml.safe_load,
+                                  silent=True)
+if not has_config:
     print('config.yaml file not found, assuming local development setup')
     characters = string.ascii_letters + string.digits
     random_string = ''.join(random.choice(characters) for _ in range(64))
     app.secret_key = random_string
 
-if 'oauth' in app.config:
-    oauth_config = app.config['oauth']
+if 'OAUTH' in app.config:
+    oauth_config = app.config['OAUTH']
     consumer_token = mwoauth.ConsumerToken(oauth_config['consumer_key'],
                                            oauth_config['consumer_secret'])
     index_php = 'https://{{ cookiecutter.wiki_domain }}/w/index.php'
@@ -79,7 +77,7 @@ def user_link(user_name{% if cookiecutter.set_up_mypy == "True" %}: str{% endif 
 
 @app.template_global()
 def authentication_area(){% if cookiecutter.set_up_mypy == "True" %} -> flask.Markup{% endif %}:
-    if 'oauth' not in app.config:
+    if 'OAUTH' not in app.config:
         return flask.Markup()
 
     session = authenticated_session()

@@ -1,5 +1,5 @@
 {% if cookiecutter.set_up_flake8 == "True" %}flake8
-{% endif %}flask
+{% endif %}flask >= 2.0.0
 mwapi
 mwoauth
 {% if cookiecutter.set_up_pytest == "True" %}pytest
