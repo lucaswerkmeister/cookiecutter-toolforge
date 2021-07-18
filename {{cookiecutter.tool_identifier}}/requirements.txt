@@ -1,3 +1,4 @@
+decorator
 {% if cookiecutter.set_up_flake8 == "True" %}flake8
 {% endif %}flask >= 2.0.0
 mwapi
@@ -7,4 +8,5 @@ mwoauth
 {% endif %}PyYAML
 requests_oauthlib
 toolforge{% if cookiecutter.set_up_mypy == "True" %}
+types-decorator
 types-PyYAML{% endif %}
