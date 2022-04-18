@@ -169,11 +169,11 @@ webservice restart</code></pre>
   and it optionally contains the OAuth secrets your tool needs.
   (Of course, you can add other things to the configuration file if you want to.)
 </p>
-<p>To start working with the config file, run the following two commands:</p>
-<pre><code>cp config.yaml.example config.yaml
-chmod go-rwx config.yaml</code></pre>
+<p>To start working with the config file, run the following command:</p>
+<pre><code>install -m600 config.yaml.example config.yaml</code></pre>
 <p>
-  It is <em>imperative</em> that you make the file unreadable to anyone else (with the second command)
+  It is <em>imperative</em> that you make the file unreadable to anyone else
+  (that’s what the <code>-m600</code> is for)
   before you start to actually fill it with real values:
   it contains secrets which no one else should be able to read.
 </p>
