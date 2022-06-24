@@ -5,8 +5,8 @@ for Wikimedia Toolforge tools using the Flask Python framework.
 
 ## Usage
 
-Install `cookiecutter` if it’s not already installed on your system.
-If it’s not available in your package manager, the following command should work:
+[Install `cookiecutter`](https://cookiecutter.readthedocs.io/en/latest/installation.html) if it’s not already installed on your system.
+On a Linux system, the following command should work:
 
 ```sh
 sudo pip install cookiecutter
