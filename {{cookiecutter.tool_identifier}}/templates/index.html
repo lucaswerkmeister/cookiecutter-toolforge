@@ -94,18 +94,18 @@
 </p>
 <h3>Set up the source code repository</h3>
 <p>
-  <a href="https://toolsadmin.wikimedia.org/tools/id/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}/repos/create">Create a new Phabricator repository with toolsadmin</a>,
+  <a href="https://toolsadmin.wikimedia.org/tools/id/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}/repos/create">Create a new GitLab repository with toolsadmin</a>,
   using the default repository name.
   (Feel free to host your source code elsewhere, if you want,
   but in that case don’t forget to update the link in the navbar in <code>base.html</code>.)
 </p>
 <p>
-  Next, push the source code from wherever you’re currently running it to Phabricator.
+  Next, push the source code from wherever you’re currently running it to GitLab.
   (The following commands should be run from the directory where <code>app.py</code> and <code>requirements.txt</code> are.)
 </p>
 <pre><code>git add .
 git commit -m 'Initial commit'
-git remote add origin vcs@git-ssh.wikimedia.org:source/tool-{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.git
+git remote add origin git@gitlab.wikimedia.org:toolforge-repos/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.git
 git push -u origin main</code></pre>
 {% endraw %}{% if cookiecutter.set_up_github_ci == "True" %}
 <p>
@@ -131,7 +131,7 @@ git push github main</code></pre>
 <p>Create the base directory for the tool.</p>
 <pre><code>mkdir -p ~/www/python/</code></pre>
 <p>Clone the source code repository.</p>
-<pre><code>git clone https://phabricator.wikimedia.org/source/tool-{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.git ~/www/python/src/</code></pre>
+<pre><code>git clone https://gitlab.wikimedia.org/toolforge-repos/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.git ~/www/python/src/</code></pre>
 <p>
   Set up the Python virtual environment.
   We do this from within a Kubernetes shell,

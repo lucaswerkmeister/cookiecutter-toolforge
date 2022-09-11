@@ -15,7 +15,7 @@
       <ul class="navbar-nav mr-auto">
         <li class="nav-item"><a href="https://{% endraw %}{{ cookiecutter.wiki_domain }}{% raw %}/wiki/User:{% endraw %}{{ cookiecutter.user_name | replace(' ', '_') }}/{{ cookiecutter.tool_name | replace(' ', '_') }}{% raw %}" class="nav-link">Documentation</a></li>
         <li class="nav-item"><a href="https://toolforge.org/" class="nav-link">Wikimedia Toolforge</a></li>
-        <li class="nav-item"><a href="https://phabricator.wikimedia.org/source/tool-{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}/" class="nav-link">Source code</a></li>
+        <li class="nav-item"><a href="https://gitlab.wikimedia.org/toolforge-repos/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}" class="nav-link">Source code</a></li>
       </ul>
       {{ authentication_area() }}
     </nav>
