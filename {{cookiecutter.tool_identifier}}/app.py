@@ -2,6 +2,7 @@
 
 import decorator
 import flask
+from markupsafe import Markup
 import mwapi{% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
 import mwoauth{% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
 import os
@@ -66,53 +67,53 @@ def csrf_token(){% if cookiecutter.set_up_mypy == "True" %} -> str{% endif %}:
 
 
 @app.template_global(){% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
-def form_value(name{% if cookiecutter.set_up_mypy == "True" %}: str{% endif %}){% if cookiecutter.set_up_mypy == "True" %} -> flask.Markup{% endif %}:
+def form_value(name{% if cookiecutter.set_up_mypy == "True" %}: str{% endif %}){% if cookiecutter.set_up_mypy == "True" %} -> Markup{% endif %}:
     if 'repeat_form' in flask.g and name in flask.request.form:
-        return (flask.Markup(r' value="') +
-                flask.Markup.escape(flask.request.form[name]) +
-                flask.Markup(r'" '))
+        return (Markup(r' value="') +
+                Markup.escape(flask.request.form[name]) +
+                Markup(r'" '))
     else:
-        return flask.Markup()
+        return Markup()
 
 
 @app.template_global(){% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
-def form_attributes(name{% if cookiecutter.set_up_mypy == "True" %}: str{% endif %}){% if cookiecutter.set_up_mypy == "True" %} -> flask.Markup{% endif %}:
-    return (flask.Markup(r' id="') +
-            flask.Markup.escape(name) +
-            flask.Markup(r'" name="') +
-            flask.Markup.escape(name) +
-            flask.Markup(r'" ') +
+def form_attributes(name{% if cookiecutter.set_up_mypy == "True" %}: str{% endif %}){% if cookiecutter.set_up_mypy == "True" %} -> Markup{% endif %}:
+    return (Markup(r' id="') +
+            Markup.escape(name) +
+            Markup(r'" name="') +
+            Markup.escape(name) +
+            Markup(r'" ') +
             form_value(name)){% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
 
 
 @app.template_filter()
-def user_link(user_name{% if cookiecutter.set_up_mypy == "True" %}: str{% endif %}){% if cookiecutter.set_up_mypy == "True" %} -> flask.Markup{% endif %}:
+def user_link(user_name{% if cookiecutter.set_up_mypy == "True" %}: str{% endif %}){% if cookiecutter.set_up_mypy == "True" %} -> Markup{% endif %}:
     user_href = 'https://{{ cookiecutter.wiki_domain }}/wiki/User:'
-    return (flask.Markup(r'<a href="' + user_href) +
-            flask.Markup.escape(user_name.replace(' ', '_')) +
-            flask.Markup(r'">') +
-            flask.Markup(r'<bdi>') +
-            flask.Markup.escape(user_name) +
-            flask.Markup(r'</bdi>') +
-            flask.Markup(r'</a>'))
+    return (Markup(r'<a href="' + user_href) +
+            Markup.escape(user_name.replace(' ', '_')) +
+            Markup(r'">') +
+            Markup(r'<bdi>') +
+            Markup.escape(user_name) +
+            Markup(r'</bdi>') +
+            Markup(r'</a>'))
 
 
 @app.template_global()
-def authentication_area(){% if cookiecutter.set_up_mypy == "True" %} -> flask.Markup{% endif %}:
+def authentication_area(){% if cookiecutter.set_up_mypy == "True" %} -> Markup{% endif %}:
     if 'OAUTH' not in app.config:
-        return flask.Markup()
+        return Markup()
 
     session = authenticated_session()
     if session is None:
-        return (flask.Markup(r'<a id="login" class="navbar-text" href="') +
-                flask.Markup.escape(flask.url_for('login')) +
-                flask.Markup(r'">Log in</a>'))
+        return (Markup(r'<a id="login" class="navbar-text" href="') +
+                Markup.escape(flask.url_for('login')) +
+                Markup(r'">Log in</a>'))
 
     userinfo = session.get(action='query',
                            meta='userinfo')['query']['userinfo']
-    return (flask.Markup(r'<span class="navbar-text">Logged in as ') +
+    return (Markup(r'<span class="navbar-text">Logged in as ') +
             user_link(userinfo['name']) +
-            flask.Markup(r'</span>'))
+            Markup(r'</span>'))
 
 
 def authenticated_session(){% if cookiecutter.set_up_mypy == "True" %} -> Optional[mwapi.Session]{% endif %}:
