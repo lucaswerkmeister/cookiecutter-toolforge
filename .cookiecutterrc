@@ -1,0 +1,5 @@
+default_context:
+  set_up_flake8: "True"
+  set_up_mypy: "True"
+  set_up_pytest: "True"
+  set_up_github_ci: "True"

@@ -1,0 +1,43 @@
+name: Test
+on:
+  push:
+  pull_request:
+jobs:
+  test-defaults:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version:
+          - '3.11'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install --upgrade pip cookiecutter
+      - run: |
+          cd "${TMPDIR:-/tmp}"
+          cookiecutter --no-input "${GITHUB_WORKSPACE}"
+          python3 -m venv venv
+          . venv/bin/activate
+          pip install -r example-tool/requirements.txt
+          python example-tool/app.py
+  test-all:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version:
+          - '3.11'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install --upgrade pip cookiecutter
+      - run: |
+          cd "${TMPDIR:-/tmp}"
+          cookiecutter --no-input --config-file "${GITHUB_WORKSPACE}/.cookiecutterrc" "${GITHUB_WORKSPACE}"
+          python3 -m venv venv
+          . venv/bin/activate
+          pip install -r example-tool/requirements.txt
+          make -C example-tool
