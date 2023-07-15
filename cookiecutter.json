@@ -4,8 +4,8 @@
     "user_name": "Example User",
     "user_email": "tools.{{ cookiecutter.tool_identifier }}@toolforge.org",
     "wiki_domain": "www.wikidata.org",
-    "set_up_flake8": [false, true],
-    "set_up_mypy": [false, true],
-    "set_up_pytest": [false, true],
-    "set_up_github_ci": [false, true]
+    "set_up_flake8": ["False", "True"],
+    "set_up_mypy": ["False", "True"],
+    "set_up_pytest": ["False", "True"],
+    "set_up_github_ci": ["False", "True"]
 }
