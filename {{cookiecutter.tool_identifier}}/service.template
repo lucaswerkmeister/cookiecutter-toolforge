@@ -1,4 +1,4 @@
 # Toolforge webservice template
 # Provide default arguments for `webservice` commands for this tool.
 backend: kubernetes
-type: python3.9
+type: python3.11
