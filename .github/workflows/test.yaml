@@ -5,15 +5,11 @@ on:
 jobs:
   test-defaults:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version:
-          - '3.11'
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: '3.11'
       - run: pip install --upgrade pip cookiecutter
       - run: |
           cd "${TMPDIR:-/tmp}"
@@ -24,15 +20,11 @@ jobs:
           python example-tool/app.py
   test-all:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version:
-          - '3.11'
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: '3.11'
       - run: pip install --upgrade pip cookiecutter
       - run: |
           cd "${TMPDIR:-/tmp}"

@@ -5,15 +5,11 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version:
-          - '3.11'
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
-          python-version: {% raw %}${{ matrix.python-version }}{% endraw %}
+          python-version: '3.11'
       - run: pip install --upgrade pip
       - run: pip install -r requirements.txt
       - run: make check
