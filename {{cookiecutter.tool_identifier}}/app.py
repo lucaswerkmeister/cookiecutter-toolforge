@@ -2,7 +2,8 @@
 
 import decorator
 import flask
-from markupsafe import Markup
+{% if cookiecutter.set_up_mypy == "True" %}from flask.typing import ResponseReturnValue as RRV
+{% endif %}from markupsafe import Markup
 import mwapi{% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
 import mwoauth{% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
 import os
@@ -11,8 +12,7 @@ import requests_oauthlib{% if cookiecutter.set_up_mypy == "True" %}  # type: ign
 import stat
 import string
 import toolforge
-{% if cookiecutter.set_up_mypy == "True" %}from typing import Optional, Tuple, Union
-import werkzeug
+{% if cookiecutter.set_up_mypy == "True" %}from typing import Optional, Tuple
 {% endif %}import yaml
 
 
@@ -132,18 +132,18 @@ def authenticated_session(){% if cookiecutter.set_up_mypy == "True" %} -> Option
 
 
 @app.route('/')
-def index(){% if cookiecutter.set_up_mypy == "True" %} -> str{% endif %}:
+def index(){% if cookiecutter.set_up_mypy == "True" %} -> RRV{% endif %}:
     return flask.render_template('index.html')
 
 
 @app.route('/greet/<name>')
-def greet(name{% if cookiecutter.set_up_mypy == "True" %}: str{% endif %}){% if cookiecutter.set_up_mypy == "True" %} -> str{% endif %}:
+def greet(name{% if cookiecutter.set_up_mypy == "True" %}: str{% endif %}){% if cookiecutter.set_up_mypy == "True" %} -> RRV{% endif %}:
     return flask.render_template('greet.html',
                                  name=name)
 
 
 @app.route('/praise', methods=['GET', 'POST'])
-def praise(){% if cookiecutter.set_up_mypy == "True" %} -> str{% endif %}:
+def praise(){% if cookiecutter.set_up_mypy == "True" %} -> RRV{% endif %}:
     csrf_error = False
     if flask.request.method == 'POST':
         if submitted_request_valid():
@@ -179,7 +179,7 @@ def praise(){% if cookiecutter.set_up_mypy == "True" %} -> str{% endif %}:
 
 
 @app.route('/login')
-def login(){% if cookiecutter.set_up_mypy == "True" %} -> werkzeug.Response{% endif %}:
+def login(){% if cookiecutter.set_up_mypy == "True" %} -> RRV{% endif %}:
     redirect, request_token = mwoauth.initiate(index_php,
                                                consumer_token,
                                                user_agent=user_agent)
@@ -192,7 +192,7 @@ def login(){% if cookiecutter.set_up_mypy == "True" %} -> werkzeug.Response{% en
 
 
 @app.route('/oauth/callback')
-def oauth_callback(){% if cookiecutter.set_up_mypy == "True" %} -> Union[werkzeug.Response, str]{% endif %}:
+def oauth_callback(){% if cookiecutter.set_up_mypy == "True" %} -> RRV{% endif %}:
     oauth_request_token = flask.session.pop('oauth_request_token', None)
     if oauth_request_token is None:
         already_logged_in = 'oauth_access_token' in flask.session
@@ -215,7 +215,7 @@ def oauth_callback(){% if cookiecutter.set_up_mypy == "True" %} -> Union[werkzeu
 
 
 @app.route('/logout')
-def logout(){% if cookiecutter.set_up_mypy == "True" %} -> werkzeug.Response{% endif %}:
+def logout(){% if cookiecutter.set_up_mypy == "True" %} -> RRV{% endif %}:
     flask.session.pop('oauth_access_token', None)
     return flask.redirect(flask.url_for('index'))
 
