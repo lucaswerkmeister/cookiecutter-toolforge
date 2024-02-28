@@ -219,6 +219,11 @@ def logout(){% if cookiecutter.set_up_mypy == "True" %} -> RRV{% endif %}:
     return flask.redirect(flask.url_for('index'))
 
 
+@app.route('/healthz')
+def health(){% if cookiecutter.set_up_mypy == "True" %} -> RRV{% endif %}:
+    return ''
+
+
 def full_url(endpoint{% if cookiecutter.set_up_mypy == "True" %}: str{% endif %}, **kwargs){% if cookiecutter.set_up_mypy == "True" %} -> str{% endif %}:
     scheme = flask.request.headers.get('X-Forwarded-Proto', 'http')
     return flask.url_for(endpoint, _external=True, _scheme=scheme, **kwargs)

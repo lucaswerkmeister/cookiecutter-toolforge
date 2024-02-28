@@ -2,3 +2,4 @@
 # Provide default arguments for `webservice` commands for this tool.
 backend: kubernetes
 type: python3.11
+health-check-path: /healthz
