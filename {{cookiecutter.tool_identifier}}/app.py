@@ -196,8 +196,7 @@ def oauth_callback(){% if cookiecutter.set_up_mypy == "True" %} -> RRV{% endif %
     oauth_request_token = flask.session.pop('oauth_request_token', None)
     if oauth_request_token is None:
         already_logged_in = 'oauth_access_token' in flask.session
-        query_string = flask.request.query_string\
-                                    .decode(flask.request.url_charset)
+        query_string = flask.request.query_string.decode('utf8')
         return flask.render_template('error-oauth-callback.html',
                                      already_logged_in=already_logged_in,
                                      query_string=query_string)
