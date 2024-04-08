@@ -208,6 +208,7 @@ def oauth_callback(){% if cookiecutter.set_up_mypy == "True" %} -> RRV{% endif %
                                     user_agent=user_agent)
     flask.session['oauth_access_token'] = dict(zip(access_token._fields,
                                                    access_token))
+    flask.session.permanent = True
     flask.session.pop('csrf_token', None)
     redirect_target = flask.session.pop('oauth_redirect_target', None)
     return flask.redirect(redirect_target or flask.url_for('index'))
@@ -216,6 +217,7 @@ def oauth_callback(){% if cookiecutter.set_up_mypy == "True" %} -> RRV{% endif %
 @app.route('/logout')
 def logout(){% if cookiecutter.set_up_mypy == "True" %} -> RRV{% endif %}:
     flask.session.pop('oauth_access_token', None)
+    flask.session.permanent = False
     return flask.redirect(flask.url_for('index'))
 
 
