@@ -105,13 +105,13 @@ def authentication_area(){% if cookiecutter.set_up_mypy == "True" %} -> Markup{%
 
     session = authenticated_session()
     if session is None:
-        return (Markup(r'<a id="login" class="navbar-text" href="') +
+        return (Markup(r'<span class="nav-item"><a id="login" class="nav-link navbar-text" href="') +
                 Markup.escape(flask.url_for('login')) +
-                Markup(r'">Log in</a>'))
+                Markup(r'">Log in</a></span>'))
 
     userinfo = session.get(action='query',
                            meta='userinfo')['query']['userinfo']
-    return (Markup(r'<span class="navbar-text">Logged in as ') +
+    return (Markup(r'<span class="nav-item navbar-text">Logged in as ') +
             user_link(userinfo['name']) +
             Markup(r'</span>'))
 
