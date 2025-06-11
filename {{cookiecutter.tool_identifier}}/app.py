@@ -1,20 +1,16 @@
 # -*- coding: utf-8 -*-
 
-import decorator
 import flask
 {% if cookiecutter.set_up_mypy == "True" %}from flask.typing import ResponseReturnValue as RRV
 {% endif %}from markupsafe import Markup
 import mwapi{% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
 import mwoauth{% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
-import os
 import random
 import requests_oauthlib{% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
-import stat
 import string
 import toolforge
 {% if cookiecutter.set_up_mypy == "True" %}from typing import Optional, Tuple
-{% endif %}import yaml
-
+{% endif %}
 
 app = flask.Flask(__name__)
 
@@ -23,26 +19,8 @@ user_agent = toolforge.set_user_agent(
     email='{{ cookiecutter.user_email }}')
 
 
-@decorator.decorator
-def read_private(func, *args, **kwargs):
-    try:
-        f = args[0]
-        fd = f.fileno()
-    except AttributeError:
-        pass
-    except IndexError:
-        pass
-    else:
-        mode = os.stat(fd).st_mode
-        if (stat.S_IRGRP | stat.S_IROTH) & mode:
-            name = getattr(f, "name", "config file")
-            raise ValueError(f'{name} is readable to others, '
-                             'must be exclusively user-readable!')
-    return func(*args, **kwargs)
-
-
 has_config = app.config.from_file('config.yaml',
-                                  load=read_private(yaml.safe_load),
+                                  load=toolforge.load_private_yaml,
                                   silent=True)
 if not has_config:
     print('config.yaml file not found, assuming local development setup')
