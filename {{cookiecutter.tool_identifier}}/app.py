@@ -88,10 +88,14 @@ def authentication_area(){% if cookiecutter.set_up_mypy == "True" %} -> Markup{%
                 Markup.escape(flask.url_for('login')) +
                 Markup(r'">Log in</a></span>'))
 
-    userinfo = session.get(action='query',
-                           meta='userinfo')['query']['userinfo']
+    access_token = mwoauth.AccessToken(
+        **flask.session['oauth_access_token'])
+    identity = mwoauth.identify(index_php,
+                                consumer_token,
+                                access_token)
+
     return (Markup(r'<span class="nav-item navbar-text">Logged in as ') +
-            user_link(userinfo['name']) +
+            user_link(identity['username']) +
             Markup(r'</span>'))
 
 

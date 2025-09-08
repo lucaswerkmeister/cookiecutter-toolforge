@@ -230,7 +230,9 @@ webservice restart</code></pre>
 </p>
 <p>
   Select which rights you want access to, if any
-  (otherwise select one of the “user identification only” options).
+  (otherwise leave just the “basic rights” checked –
+  or use a “user identity verification only” consumer and make sure to only use <code>mwoauth.identify()</code>,
+  as seen in <code>authentication_area()</code>, and not <code>action='userinfo'</code>, as seen in <code>praise()</code>).
   This will highly depend on your tool,
   but “edit existing pages”, “create, edit and move pages” and “high-volume editing” are probably the most generally useful ones.
 </p>
