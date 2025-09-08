@@ -1,17 +1,17 @@
 from __future__ import print_function
 
-try:
-    from urllib.error import HTTPError
-    from urllib.request import urlopen
-except ImportError:
-    from urllib2 import HTTPError, urlopen
+from urllib.error import HTTPError
+from urllib.request import Request, urlopen
 import sys
 
 
+user_agent = ('cookiecutter-toolforge ('
+              'https://github.com/lucaswerkmeister/cookiecutter-toolforge)')
+url = ('https://toolsadmin.wikimedia.org/tools/api/toolname/'
+       '{{ cookiecutter.tool_identifier }}')
+request = Request(url, headers={'User-Agent': user_agent})
 try:
-    urlopen('https://toolsadmin.wikimedia.org/' +
-            'tools/api/toolname/' +
-            '{{ cookiecutter.tool_identifier }}').close()
+    urlopen(request).close()
 except HTTPError:
     # Striker returns HTTP 406 Not Acceptable for invalid tool names
     print('\033[1m', file=sys.stderr)  # ANSI SGR 1: bold text
