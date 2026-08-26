@@ -7,4 +7,5 @@ mwoauth
 {% endif %}{% if cookiecutter.set_up_mypy == "True" %}mypy
 {% endif %}PyYAML
 requests_oauthlib
-toolforge >= 6.1.0
+toolforge >= 6.1.0{% if cookiecutter.set_up_mypy == "True" %}
+types-PyYAML{% endif %}

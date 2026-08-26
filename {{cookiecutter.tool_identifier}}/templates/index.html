@@ -163,33 +163,29 @@ webservice restart</code></pre>
 </p>
 <h3>Configure the tool</h3>
 <p>
-  You should also create the config file for the tool.
-  It currently serves two purposes:
+  The configuration for the tool currently serves two purposes:
   it configures the secret key with which Flask signs the user session to protect it against manipulation,
   and it optionally contains the OAuth secrets your tool needs.
-  (Of course, you can add other things to the configuration file if you want to.)
+  (Of course, you can add other things to the configuration if you want to.)
 </p>
-<p>To start working with the config file, run the following command:</p>
+<p>
+  There are two ways to configure the tool.
+  The config file is convenient for local development,
+  while environment variables are better for deployment on Toolforge.
+</p>
+<h4>Creating a configuration file</h4>
+<p>
+  To start working with the config file on your local development system,
+  run the following command:
+</p>
 <pre><code>install -m600 config.yaml.example config.yaml</code></pre>
 <p>
-  It is <em>imperative</em> that you make the file unreadable to anyone else
-  (that’s what the <code>-m600</code> is for)
-  before you start to actually fill it with real values:
-  it contains secrets which no one else should be able to read.
-</p>
-<p>
-  (<em>Where</em> should you run these commands, by the way?
-  Almost certainly on Toolforge, as your tool account, inside the <code>~/www/python/src/</code> directory.
-  You can also do it on the local version, if you want.)
-</p>
-<p>
-  After this, you can start editing the configuration file,
+  The <code>-m600</code> ensures that the file is unreadable to anyone else
+  (the tool will refuse to start otherwise),
+  as it contains secrets which no one else should be able to read.
+  After this, you can start editing the <code>config.yaml</code> file
   using your favorite text editor.
-  On Toolforge, this will have to be a terminal-based editor;
-  if you’re not familiar with those yet,
-  <a href="http://www.wikidata.org/entity/Q306101">nano</a> is a fairly user-friendly option:
 </p>
-<pre><code>nano config.yaml</code></pre>
 <p>
   For the <code>SECRET_KEY</code> option,
   you should pick some long (about 50 characters), unguessable string.
@@ -200,6 +196,24 @@ webservice restart</code></pre>
 <p>
   The <code>OAUTH</code> section is only necessary if you want to set up OAuth (see the next section),
   otherwise you can remove it completely.
+</p>
+<h4>Setting up environment variables</h4>
+<p>
+  On Toolforge, a configuration file is cumbersome to work with,
+  and it’s better to read the configuration from environment variables instead.
+  These can be set using <a href="https://wikitech.wikimedia.org/wiki/Help:Toolforge/Envvars"><code>toolforge envvars</code></a>;
+  any environment variable beginning with <code>TOOL_</code> corresponds to a config variable,
+  and nested objects can be set using double underscores
+  (see <a href="https://flask.palletsprojects.com/en/stable/api/#flask.Config.from_prefixed_env"><code>from_prefixed_env()</code></a> for details).
+</p>
+<p>
+  To initialize the secret key to a random string,
+  run the following command in your Toolforge SSH shell
+  (after running <code>become {% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}</code> as mentioned above):
+</p>
+<pre><code>toolforge envvars create TOOL_SECRET_KEY &lt; /proc/sys/kernel/random/uuid</code></pre>
+<p>
+  For <code>OAUTH</code> configuration, see the next section.
 </p>
 <h3>Register an OAuth consumer</h3>
 <p>
@@ -245,9 +259,23 @@ webservice restart</code></pre>
   (after reading it, and only if you actually agree with what it says –
   you’re not just following this guide blindly, right?),
   and submit it.
-  The next page will show you two random strings;
-  these will be the <code>consumer_key</code> and <code>consumer_secret</code> in the <code>config.yaml</code> file.
+  The next page will show you two random strings,
+  first the consumer key and then the consumer secret.
+  You need to save these in the tool configuration:
 </p>
+<ol>
+  <li>
+    In your local <code>config.yaml</code> file,
+    write them into the <code>CONSUMER_KEY</code> and <code>CONSUMER_SECRET</code> in the <code>OAUTH</code> section.
+  </li>
+  <li>
+    On Toolforge, save them in the following envvars:
+    <pre><code><kbd>toolforge envvars create <strong>TOOL_OAUTH__CONSUMER_KEY</strong></kbd>
+<samp>Enter the value of your envvar (Hit Ctrl+C to cancel): </samp><kbd>...</kbd>
+<kbd>toolforge envvars create <strong>TOOL_OAUTH__CONSUMER_SECRET</strong></kbd>
+<samp>Enter the value of your envvar (Hit Ctrl+C to cancel): </samp><kbd>...</kbd></code></pre>
+  </li>
+</ol>
 <p>
   Afterwards, you can post a steward request for someone to approve of your new consumer,
   by using the <a href="https://meta.wikimedia.org/wiki/Template:Oauthapprequest">Oauthapprequest</a> template
