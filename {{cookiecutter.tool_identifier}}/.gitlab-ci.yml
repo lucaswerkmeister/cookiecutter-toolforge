@@ -1,0 +1,19 @@
+default:
+  image: python:3.11
+  cache:
+    - key: pip-python-3.11
+      paths:
+        - .cache/pip
+
+stages:
+  - test
+
+variables:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+test-job:
+  stage: test
+  script:
+    - python3 -m pip install -r requirements.txt
+    - make check
