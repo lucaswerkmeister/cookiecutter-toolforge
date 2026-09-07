@@ -1,5 +1,6 @@
 {% if cookiecutter.set_up_flake8 == "True" %}flake8
 {% endif %}flask >= 2.0.0
+gunicorn
 MarkupSafe
 mwapi
 mwoauth
