@@ -114,39 +114,20 @@ git push -u origin main</code></pre>
   see <a href="https://wikitech.wikimedia.org/wiki/Help:Access">the documentation on Wikitech</a> for more information),
   and then run <code>become {% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}</code>.
 </p>
-<p>Create the base directory for the tool.</p>
-<pre><code>mkdir -p ~/www/python/</code></pre>
-<p>Clone the source code repository.</p>
-<pre><code>git clone https://gitlab.wikimedia.org/toolforge-repos/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.git ~/www/python/src/</code></pre>
-<p>
-  Set up the Python virtual environment.
-  We do this from within a Kubernetes shell,
-  to ensure that we’re using the same Python version that the tool will later run under.
-</p>
-<pre><code>webservice shell
-python3 -m venv ~/www/python/venv
-source ~/www/python/venv/bin/activate
-pip install --upgrade pip
-pip install -r ~/www/python/src/requirements.txt
-exit</code></pre>
-<p>Start the webservice.</p>
+<p>Download the <code>service.template</code> file which tells Toolforge how to run your tool.</p>
+<pre><code>wget https://gitlab.wikimedia.org/toolforge-repos/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}/-/raw/main/service.template</code></pre>
+<p>Build the container image.</p>
+<pre><code>toolforge build start https://gitlab.wikimedia.org/toolforge-repos/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.git</code></pre>
+<p>Once the build has finished, start the webservice.</p>
 <pre><code>webservice start</code></pre>
 <p>
   Your tool should now be running:
   visit <a href="https://{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.toolforge.org/">{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.toolforge.org</a> to check.
-  Generally, any time you make changes,
+  Generally, any time you push changes to GitLab,
   the update process will consist of the following commands:
 </p>
-<pre><code>git -C ~/www/python/src pull
+<pre><code>toolforge build start https://gitlab.wikimedia.org/toolforge-repos/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.git
 webservice restart</code></pre>
-<p>
-  If the tool requires any new dependencies
-  (that is, if the <code>requirements.txt</code> file was changed),
-  you’ll also want to run the second <code>pip install</code> command from above again.
-  Make sure you do that from within the virtual environment
-  (i. e. you’ve run the <code>source</code> command from above first),
-  and ideally inside the Kubernetes shell as well.
-</p>
 <h3>Configure the tool</h3>
 <p>
   The configuration for the tool currently serves two purposes:
