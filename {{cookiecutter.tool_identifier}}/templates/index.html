@@ -96,8 +96,9 @@
 <p>
   <a href="https://toolsadmin.wikimedia.org/tools/id/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}/repos/create">Create a new GitLab repository with toolsadmin</a>,
   using the default repository name.
-  (Feel free to host your source code elsewhere, if you want,
-  but in that case don’t forget to update the link in the navbar in <code>base.html</code>.)
+  (You can host your source code elsewhere if you want,
+  but in that case you’ll have to update the link in the navbar in <code>base.html</code>,
+  and also the deployment instructions below won’t apply.)
 </p>
 <p>
   Next, push the source code from wherever you’re currently running it to GitLab.
@@ -114,20 +115,31 @@ git push -u origin main</code></pre>
   see <a href="https://wikitech.wikimedia.org/wiki/Help:Access">the documentation on Wikitech</a> for more information),
   and then run <code>become {% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}</code>.
 </p>
-<p>Download the <code>service.template</code> file which tells Toolforge how to run your tool.</p>
-<pre><code>wget https://gitlab.wikimedia.org/toolforge-repos/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}/-/raw/main/service.template</code></pre>
-<p>Build the container image.</p>
-<pre><code>toolforge build start https://gitlab.wikimedia.org/toolforge-repos/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.git</code></pre>
-<p>Once the build has finished, start the webservice.</p>
-<pre><code>webservice start</code></pre>
+<p>
+  Create a deploy token which will be used to deploy the tool from GitLab CI.
+</p>
+<pre><code>$ <kbd>toolforge components deploy-token create</kbd>
+Token: <strong><var>77aaa3a5-6cee-4e86-a6f7-51a64e0ebb57</var></strong>
+Created: <var>2026-09-20T14:14:28.419839Z</var>
+</code></pre>
+<p>
+  Save the token as a new <a href="https://gitlab.wikimedia.org/toolforge-repos/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}/-/settings/ci_cd#js-cicd-variables-settings">CI variable in the GitLab repository</a>.
+  The variable must be named <code>TOOLS_DEPLOY_TOKEN</code>,
+  it must be “Masked and hidden”,
+  and “Protect variable” must be checked.
+  Suggested description:
+  <q>Access token to deploy to the Toolforge Components Service from CI.</q>
+</p>
+<p>Create the initial deployment of the tool.</p>
+<pre><code>curl -sL https://gitlab.wikimedia.org/toolforge-repos/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}/-/raw/main/toolforge.yaml | toolforge components config create</code></pre>
 <p>
   Your tool should now be running:
   visit <a href="https://{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.toolforge.org/">{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.toolforge.org</a> to check.
-  Generally, any time you push changes to GitLab,
-  the update process will consist of the following commands:
 </p>
-<pre><code>toolforge build start https://gitlab.wikimedia.org/toolforge-repos/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.git
-webservice restart</code></pre>
+<p>
+  Every subsequent <code>git push</code> to the repository should automatically be deployed to Toolforge.
+  For details, see the generated <code>README.md</code> file.
+</p>
 <h3>Configure the tool</h3>
 <p>
   The configuration for the tool currently serves two purposes:
