@@ -5,15 +5,24 @@ default:
       paths:
         - .cache/pip
 
+include:
+  - project: "repos/cloud/cicd/gitlab-ci"
+    file: "toolforge-cd/deploy-to-toolforge.yaml"
+
 stages:
+{%- if cookiecutter.set_up_gitlab_ci == "True" %}
   - test
+{%- endif %}
+  - deploy
 
 variables:
   PYTHONDONTWRITEBYTECODE: "1"
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+{%- if cookiecutter.set_up_gitlab_ci == "True" %}
 
 test-job:
   stage: test
   script:
     - python3 -m pip install -r requirements.txt
     - make check
+{%- endif %}
