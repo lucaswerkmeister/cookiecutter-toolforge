@@ -1,7 +1,7 @@
 default:
-  image: python:3.11
+  image: python:3.14
   cache:
-    - key: pip-python-3.11
+    - key: pip-python-3.14
       paths:
         - .cache/pip
 
