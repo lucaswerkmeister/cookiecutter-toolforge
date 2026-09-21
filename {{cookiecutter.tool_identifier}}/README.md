@@ -13,30 +13,72 @@ please see the tool’s [on-wiki documentation page](https://{{ cookiecutter.wik
 
 ## Toolforge setup
 
-On Wikimedia Toolforge, this tool runs under the `{{ cookiecutter.tool_identifier }}` tool name.
-Source code resides in `~/www/python/src/`,
-a virtual environment is set up in `~/www/python/venv/`,
-logs end up in `~/uwsgi.log`.
+On Wikimedia Toolforge, this tool runs under the `{{ cookiecutter.tool_identifier }}` tool name,
+using the [Toolforge Components Service](https://wikitech.wikimedia.org/wiki/Help:Toolforge/Deploy_your_tool) to coordinate
+building a container with the [Toolforge Build Service](https://wikitech.wikimedia.org/wiki/Help:Toolforge/Build_Service)
+and then deploying that for the webservice and background runner.
+The components configuration is in the `toolforge.yaml` file.
 
-If the web service is not running for some reason, run the following command:
-```
-webservice start
-```
-If it’s acting up, try the same command with `restart` instead of `start`.
-Both should pull their config from the `service.template` file,
-which is symlinked from the source code directory into the tool home directory.
+To start a new deployment,
+run the following command on Toolforge after becoming the tool account:
 
-To update the service, run the following commands after becoming the tool account:
+```sh
+toolforge components deployment create
 ```
-webservice shell
-source ~/www/python/venv/bin/activate
-cd ~/www/python/src
-git fetch
-git diff @ @{u} # inspect changes
-git merge --ff-only @{u}
-pip3 install -r requirements.txt
-webservice restart
+
+This should automatically kick off an image build and restart the webservice at the end.
+
+### Details and troubleshooting
+
+To inspect the overall deployment status, run:
+
+```sh
+toolforge components deployment show
 ```
+
+To debug the image build step, it may be useful to trigger an image build explicitly –
+you can add `--ref=foobar` to build from the `foobar` branch instead of the `main` branch:
+
+```sh
+toolforge build start https://gitlab.wikimedia.org/toolforge-repos/{{ cookiecutter.tool_identifier }}
+```
+
+The web frontent is a Flask WSGI app using gunicorn,
+and runs as the `{{ cookiecutter.tool_identifier }}` job,
+which you may inspect with commands like these:
+
+```sh
+toolforge jobs show {{ cookiecutter.tool_identifier }}
+toolforge jobs logs {{ cookiecutter.tool_identifier }}
+kubectl get deployment {{ cookiecutter.tool_identifier }}
+kubectl exec -it deployment/{{ cookiecutter.tool_identifier }} -- bash
+```
+
+### Configuration
+
+The tool reads configuration from both the `config.yaml` file (if it exists)
+and from any environment variables starting with `TOOL_*`.
+The config file is more convenient for local development;
+the environment variables are used on Toolforge:
+list them with `toolforge envvars list`.
+Nested dicts are specified with envvar names where `__` separates the key components,
+so that e.g. the following are equivalent:
+
+```sh
+toolforge envvars create TOOL_OAUTH__CONSUMER_KEY 271b735e0cf895694f2ee7a3ae7a2dbc
+```
+
+```yaml
+OAUTH:
+    CONSUMER_KEY: 271b735e0cf895694f2ee7a3ae7a2dbc
+```
+
+For the available configuration variables, see the `config.yaml.example` file.
+
+### Update
+
+The tool should automatically be updated on every push to the `main` branch.
+To trigger a manual update, run `toolforge components deployment create` as described above.
 
 ## Local development setup
 

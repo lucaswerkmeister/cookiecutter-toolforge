@@ -96,8 +96,9 @@
 <p>
   <a href="https://toolsadmin.wikimedia.org/tools/id/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}/repos/create">Create a new GitLab repository with toolsadmin</a>,
   using the default repository name.
-  (Feel free to host your source code elsewhere, if you want,
-  but in that case don’t forget to update the link in the navbar in <code>base.html</code>.)
+  (You can host your source code elsewhere if you want,
+  but in that case you’ll have to update the link in the navbar in <code>base.html</code>,
+  and also the deployment instructions below won’t apply.)
 </p>
 <p>
   Next, push the source code from wherever you’re currently running it to GitLab.
@@ -107,20 +108,6 @@
 git commit -m 'Initial commit'
 git remote add origin git@gitlab.wikimedia.org:toolforge-repos/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.git
 git push -u origin main</code></pre>
-{% endraw %}{% if cookiecutter.set_up_github_ci == "True" %}
-<p>
-  To automatically run checks on <a href="https://github.com/features/actions">GitHub Actions</a>
-  (so-called Continuous Integration, or CI),
-  you’ll also want to push your code to GitHub.
-  <a href="https://github.com/new">Create a new repository</a> named <code>tool-{{ cookiecutter.tool_identifier }}</code>,
-  then add it as a second remote and push your code to it:
-</p>
-<pre><code>git remote add github git@github.com:<var>YourUserName</var>/tool-{{ cookiecutter.tool_identifier }}.git
-git push github main</code></pre>
-<p>
-  Note that you’ll want to push to both remotes, <code>origin</code> and <code>github</code>, after committing code changes.
-</p>
-{% endif %}{% raw %}
 <h3>Deploy the tool on Wikimedia Toolforge</h3>
 <p>
   SSH into Toolforge
@@ -128,68 +115,56 @@ git push github main</code></pre>
   see <a href="https://wikitech.wikimedia.org/wiki/Help:Access">the documentation on Wikitech</a> for more information),
   and then run <code>become {% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}</code>.
 </p>
-<p>Create the base directory for the tool.</p>
-<pre><code>mkdir -p ~/www/python/</code></pre>
-<p>Clone the source code repository.</p>
-<pre><code>git clone https://gitlab.wikimedia.org/toolforge-repos/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.git ~/www/python/src/</code></pre>
 <p>
-  Set up the Python virtual environment.
-  We do this from within a Kubernetes shell,
-  to ensure that we’re using the same Python version that the tool will later run under.
+  Create a deploy token which will be used to deploy the tool from GitLab CI.
 </p>
-<pre><code>webservice shell
-python3 -m venv ~/www/python/venv
-source ~/www/python/venv/bin/activate
-pip install --upgrade pip
-pip install -r ~/www/python/src/requirements.txt
-exit</code></pre>
-<p>Start the webservice.</p>
-<pre><code>webservice start</code></pre>
+<pre><code>$ <kbd>toolforge components deploy-token create</kbd>
+Token: <strong><var>77aaa3a5-6cee-4e86-a6f7-51a64e0ebb57</var></strong>
+Created: <var>2026-09-20T14:14:28.419839Z</var>
+</code></pre>
+<p>
+  Save the token as a new <a href="https://gitlab.wikimedia.org/toolforge-repos/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}/-/settings/ci_cd#js-cicd-variables-settings">CI variable in the GitLab repository</a>.
+  The variable must be named <code>TOOLS_DEPLOY_TOKEN</code>,
+  it must be “Masked and hidden”,
+  and “Protect variable” must be checked.
+  Suggested description:
+  <q>Access token to deploy to the Toolforge Components Service from CI.</q>
+</p>
+<p>Create the initial deployment of the tool.</p>
+<pre><code>curl -sL https://gitlab.wikimedia.org/toolforge-repos/{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}/-/raw/main/toolforge.yaml | toolforge components config create</code></pre>
 <p>
   Your tool should now be running:
   visit <a href="https://{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.toolforge.org/">{% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}.toolforge.org</a> to check.
-  Generally, any time you make changes,
-  the update process will consist of the following commands:
 </p>
-<pre><code>git -C ~/www/python/src pull
-webservice restart</code></pre>
 <p>
-  If the tool requires any new dependencies
-  (that is, if the <code>requirements.txt</code> file was changed),
-  you’ll also want to run the second <code>pip install</code> command from above again.
-  Make sure you do that from within the virtual environment
-  (i. e. you’ve run the <code>source</code> command from above first),
-  and ideally inside the Kubernetes shell as well.
+  Every subsequent <code>git push</code> to the repository should automatically be deployed to Toolforge.
+  For details, see the generated <code>README.md</code> file.
 </p>
 <h3>Configure the tool</h3>
 <p>
-  You should also create the config file for the tool.
-  It currently serves two purposes:
+  The configuration for the tool currently serves two purposes:
   it configures the secret key with which Flask signs the user session to protect it against manipulation,
   and it optionally contains the OAuth secrets your tool needs.
-  (Of course, you can add other things to the configuration file if you want to.)
+  (Of course, you can add other things to the configuration if you want to.)
 </p>
-<p>To start working with the config file, run the following command:</p>
+<p>
+  There are two ways to configure the tool.
+  The config file is convenient for local development,
+  while environment variables are better for deployment on Toolforge.
+</p>
+<h4>Creating a configuration file</h4>
+<p>
+  To start working with the config file on your local development system,
+  run the following command:
+</p>
 <pre><code>install -m600 config.yaml.example config.yaml</code></pre>
 <p>
-  It is <em>imperative</em> that you make the file unreadable to anyone else
-  (that’s what the <code>-m600</code> is for)
-  before you start to actually fill it with real values:
-  it contains secrets which no one else should be able to read.
-</p>
-<p>
-  (<em>Where</em> should you run these commands, by the way?
-  Almost certainly on Toolforge, as your tool account, inside the <code>~/www/python/src/</code> directory.
-  You can also do it on the local version, if you want.)
-</p>
-<p>
-  After this, you can start editing the configuration file,
+  The <code>-m600</code> ensures that the file is unreadable to anyone else
+  (the tool will refuse to start otherwise),
+  as it contains secrets which no one else should be able to read.
+  After this, you can start editing the <code>config.yaml</code> file
   using your favorite text editor.
-  On Toolforge, this will have to be a terminal-based editor;
-  if you’re not familiar with those yet,
-  <a href="http://www.wikidata.org/entity/Q306101">nano</a> is a fairly user-friendly option:
 </p>
-<pre><code>nano config.yaml</code></pre>
 <p>
   For the <code>SECRET_KEY</code> option,
   you should pick some long (about 50 characters), unguessable string.
@@ -200,6 +175,24 @@ webservice restart</code></pre>
 <p>
   The <code>OAUTH</code> section is only necessary if you want to set up OAuth (see the next section),
   otherwise you can remove it completely.
+</p>
+<h4>Setting up environment variables</h4>
+<p>
+  On Toolforge, a configuration file is cumbersome to work with,
+  and it’s better to read the configuration from environment variables instead.
+  These can be set using <a href="https://wikitech.wikimedia.org/wiki/Help:Toolforge/Envvars"><code>toolforge envvars</code></a>;
+  any environment variable beginning with <code>TOOL_</code> corresponds to a config variable,
+  and nested objects can be set using double underscores
+  (see <a href="https://flask.palletsprojects.com/en/stable/api/#flask.Config.from_prefixed_env"><code>from_prefixed_env()</code></a> for details).
+</p>
+<p>
+  To initialize the secret key to a random string,
+  run the following command in your Toolforge SSH shell
+  (after running <code>become {% endraw %}{{ cookiecutter.tool_identifier }}{% raw %}</code> as mentioned above):
+</p>
+<pre><code>toolforge envvars create TOOL_SECRET_KEY &lt; /proc/sys/kernel/random/uuid</code></pre>
+<p>
+  For <code>OAUTH</code> configuration, see the next section.
 </p>
 <h3>Register an OAuth consumer</h3>
 <p>
@@ -245,9 +238,23 @@ webservice restart</code></pre>
   (after reading it, and only if you actually agree with what it says –
   you’re not just following this guide blindly, right?),
   and submit it.
-  The next page will show you two random strings;
-  these will be the <code>consumer_key</code> and <code>consumer_secret</code> in the <code>config.yaml</code> file.
+  The next page will show you two random strings,
+  first the consumer key and then the consumer secret.
+  You need to save these in the tool configuration:
 </p>
+<ol>
+  <li>
+    In your local <code>config.yaml</code> file,
+    write them into the <code>CONSUMER_KEY</code> and <code>CONSUMER_SECRET</code> in the <code>OAUTH</code> section.
+  </li>
+  <li>
+    On Toolforge, save them in the following envvars:
+    <pre><code><kbd>toolforge envvars create <strong>TOOL_OAUTH__CONSUMER_KEY</strong></kbd>
+<samp>Enter the value of your envvar (Hit Ctrl+C to cancel): </samp><kbd>...</kbd>
+<kbd>toolforge envvars create <strong>TOOL_OAUTH__CONSUMER_SECRET</strong></kbd>
+<samp>Enter the value of your envvar (Hit Ctrl+C to cancel): </samp><kbd>...</kbd></code></pre>
+  </li>
+</ol>
 <p>
   Afterwards, you can post a steward request for someone to approve of your new consumer,
   by using the <a href="https://meta.wikimedia.org/wiki/Template:Oauthapprequest">Oauthapprequest</a> template

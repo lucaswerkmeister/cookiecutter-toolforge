@@ -1,5 +1,6 @@
 {% if cookiecutter.set_up_flake8 == "True" %}flake8
 {% endif %}flask >= 2.0.0
+gunicorn
 MarkupSafe
 mwapi
 mwoauth
@@ -7,4 +8,5 @@ mwoauth
 {% endif %}{% if cookiecutter.set_up_mypy == "True" %}mypy
 {% endif %}PyYAML
 requests_oauthlib
-toolforge >= 6.1.0
+toolforge >= 6.1.0{% if cookiecutter.set_up_mypy == "True" %}
+types-PyYAML{% endif %}
