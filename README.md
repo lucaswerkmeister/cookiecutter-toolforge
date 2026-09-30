@@ -55,8 +55,10 @@ You will be prompted for the following variables:
 * **set_up_pytest**: Whether to set up [pytest](https://docs.pytest.org/), a Python testing framework.
   Enable this if you want to write tests for your tool and run them with pytest.
   Automated tests are very useful to ensure that your tool keeps working when the code is changed later.
-* **set_up_github_ci**: Whether to set up Continuous Integration using [GitHub Actions](https://github.com/features/actions).
-  Enable this if you plan to publish your tool’s code on GitHub and want to automatically run the checks configured with the previous variables.
+* **set_up_gitlab_ci**: Whether to set up Continuous Integration using [GitLab CI](https://docs.gitlab.com/ci/).
+  Enable this to run automatic checks (Flake8, mypy and/or pytest, depending on the previous variables) whenever you push your tool’s code to Wikimedia GitLab;
+  otherwise, GitLab CI will only be used to deploy the tool to Toolforge.
+  (If you don’t want to use Wikimedia GitLab at all, you’ll have to configure deployment differently.)
 
 ## Features
 

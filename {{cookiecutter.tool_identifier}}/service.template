@@ -1,4 +1,0 @@
-# Toolforge webservice template
-# Provide default arguments for `webservice` commands for this tool.
-type: python3.11
-health-check-path: /healthz

@@ -7,5 +7,5 @@
     "set_up_flake8": ["False", "True"],
     "set_up_mypy": ["False", "True"],
     "set_up_pytest": ["False", "True"],
-    "set_up_github_ci": ["False", "True"]
+    "set_up_gitlab_ci": ["False", "True"]
 }

@@ -9,6 +9,7 @@ import random
 import requests_oauthlib{% if cookiecutter.set_up_mypy == "True" %}  # type: ignore{% endif %}
 import string
 import toolforge
+import yaml
 {% if cookiecutter.set_up_mypy == "True" %}from typing import Optional, Tuple
 {% endif %}
 
@@ -19,20 +20,22 @@ user_agent = toolforge.set_user_agent(
     email='{{ cookiecutter.user_email }}')
 
 
-has_config = app.config.from_file('config.yaml',
-                                  load=toolforge.load_private_yaml,
-                                  silent=True)
-if not has_config:
-    print('config.yaml file not found, assuming local development setup')
-    characters = string.ascii_letters + string.digits
-    random_string = ''.join(random.choice(characters) for _ in range(64))
-    app.secret_key = random_string
-
+app.config.from_file('config.yaml',
+                     load=toolforge.load_private_yaml,
+                     silent=True)
+app.config.from_prefixed_env('TOOL',
+                             loads=yaml.safe_load)
 if 'OAUTH' in app.config:
+    assert app.secret_key is not None, \
+        ('If OAuth is configured, the SECRET_KEY must also be configured '
+         '(a fixed random string)')
     oauth_config = app.config['OAUTH']
-    consumer_token = mwoauth.ConsumerToken(oauth_config['consumer_key'],
-                                           oauth_config['consumer_secret'])
+    consumer_token = mwoauth.ConsumerToken(oauth_config['CONSUMER_KEY'],
+                                           oauth_config['CONSUMER_SECRET'])
     index_php = 'https://{{ cookiecutter.wiki_domain }}/w/index.php'
+elif app.secret_key is None:
+    print('Incomplete configuration, assuming local development setup')
+    app.secret_key = 'fake'
 
 
 @app.template_global()
